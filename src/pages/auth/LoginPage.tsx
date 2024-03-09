@@ -71,7 +71,7 @@ export default function LoginPage() {
             <img src={resources.welcomeVector} alt="welcome-vector" />
           </Stack>
           <Title variant="h5">Digital Election Coalition System</Title>
-          <Paragraph textAlign="center">
+          <Paragraph width="80%" textAlign="center">
             Record and monitor all your pollings, track and get real time live
             feeds as results are being uploaded.
           </Paragraph>
