@@ -56,7 +56,7 @@ export default function ResponseDialogModal({
             style={{ height: "30px" }}
             size="small"
           >
-            Done
+            Ok
           </PrimaryButton>
         </Stack>
       </Stack>

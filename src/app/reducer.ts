@@ -1,9 +1,10 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import { AuthReducer } from "../features";
+import { AuthReducer, ResponseReducer } from "../features";
 //
 //
 //
 //
 export default combineReducers({
   AuthReducer,
+  ResponseReducer,
 });

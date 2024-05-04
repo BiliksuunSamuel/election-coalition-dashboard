@@ -1,6 +1,37 @@
-import { Box, BoxProps } from "@mui/material";
+import { Stack, StackProps } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { handleLogout } from "../../features/AuthReducer";
 
-interface IProps extends BoxProps {}
+interface IProps extends StackProps {}
 export default function AuthGuard({ children, ...others }: IProps) {
-  return <Box {...others}>{children}</Box>;
+  const navigation = useNavigate();
+  const { user, token } = useAppSelector((state) => state.AuthReducer);
+  const dispatch = useAppDispatch();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (user && token) {
+      const pathname = location.pathname;
+      navigation(pathname !== "/" ? pathname : "/dashboard");
+    }
+    if (!user || !token) {
+      dispatch(handleLogout());
+      navigation("/");
+    }
+  }, [user, token]);
+
+  useEffect(() => {
+    if (user && token) {
+      const pathname = location.pathname;
+      navigation(pathname !== "/" ? pathname : "/dashboard");
+    }
+    if (!user || !token) {
+      dispatch(handleLogout());
+      navigation("/");
+    }
+  }, []);
+
+  return <Stack {...others}>{children}</Stack>;
 }

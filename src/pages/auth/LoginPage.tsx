@@ -1,11 +1,16 @@
-import { InputAdornment, Stack, alpha } from "@mui/material";
-import { FluidContainer } from "../../views";
+import { InputAdornment, Stack, alpha, useTheme } from "@mui/material";
+import { FluidContainer, ResponseModal } from "../../views";
 import { CustomInput, Paragraph, PrimaryButton, Title } from "../../components";
 import resources from "../../resources";
-import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import useAuth from "../../hooks/useAuth";
+import { clearResponse } from "../../features/ResponseReducer";
 
 export default function LoginPage() {
-  const navigation = useNavigate();
+  const { loginRequest, handleLoginForm, handleLogin } = useAuth();
+  const { error, loading } = useAppSelector((state) => state.ResponseReducer);
+  const dispatch = useAppDispatch();
+  const theme = useTheme();
   return (
     <FluidContainer alignItems="center" justifyContent="center" padding={4}>
       <Stack
@@ -18,6 +23,12 @@ export default function LoginPage() {
           padding: 0,
         })}
       >
+        <ResponseModal
+          variant="error"
+          message={error}
+          open={Boolean(error)}
+          handleDone={() => dispatch(clearResponse())}
+        />
         <Stack
           sx={(theme) => ({
             height: "100%",
@@ -48,10 +59,17 @@ export default function LoginPage() {
               }
               label="Phone Number"
               placeholder="Enter phonenumber"
-              style={{ height: "45px" }}
+              value={loginRequest.username}
+              onChange={handleLoginForm}
+              style={{ height: "45px", fontSize: theme.spacing(2.25) }}
+              name="username"
             />
 
-            <PrimaryButton onClick={() => navigation("/verify-otp")}>
+            <PrimaryButton
+              loading={loading}
+              disabled={loading}
+              onClick={handleLogin}
+            >
               Login
             </PrimaryButton>
           </Stack>
