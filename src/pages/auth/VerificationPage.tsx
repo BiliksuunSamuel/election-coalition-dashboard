@@ -1,11 +1,20 @@
 import { InputAdornment, Stack, alpha } from "@mui/material";
 import { FluidContainer } from "../../views";
-import { CustomInput, Paragraph, PrimaryButton, Title } from "../../components";
+import {
+  CustomInput,
+  CustomOtpInput,
+  Paragraph,
+  PrimaryButton,
+  SizedBox,
+  Title,
+} from "../../components";
 import resources from "../../resources";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-export default function LoginPage() {
+export default function VerificationPage() {
   const navigation = useNavigate();
+  const [code, setCode] = useState("");
   return (
     <FluidContainer alignItems="center" justifyContent="center" padding={4}>
       <Stack
@@ -36,22 +45,18 @@ export default function LoginPage() {
             <Stack marginY={2}>
               <img src={resources.logo} alt="app-logo" />
             </Stack>
-            <Title variant="h4">Welcome back</Title>
+            <Title variant="h4">Enter Verification Code</Title>
             <Paragraph>
-              Glad to see you again, Login to your account below
+              A verification code has been sent to 233550465223
             </Paragraph>
           </Stack>
           <Stack width="80%" spacing={2}>
-            <CustomInput
-              startAdornment={
-                <InputAdornment position="start">+233</InputAdornment>
-              }
-              label="Phone Number"
-              placeholder="Enter phonenumber"
-              style={{ height: "45px" }}
-            />
-
-            <PrimaryButton onClick={() => navigation("/verify-otp")}>
+            <CustomOtpInput code={code} handleChange={(c) => setCode(c)} />
+            <SizedBox height={1} />
+            <PrimaryButton
+              style={{ width: "80%", alignSelf: "center" }}
+              onClick={() => navigation("/dashboard")}
+            >
               Login
             </PrimaryButton>
           </Stack>

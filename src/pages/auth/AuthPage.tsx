@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 
 export default function AuthPage() {
   return (
-    <Stack height="100vh">
+    <Stack style={{ overflowX: "hidden" }} height="100vh">
       <Outlet />
     </Stack>
   );

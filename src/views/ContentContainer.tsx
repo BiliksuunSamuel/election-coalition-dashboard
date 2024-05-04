@@ -15,8 +15,8 @@ export default function ContentContainer({ children, ...others }: IProps) {
     <Stack
       alignItems="center"
       justifyContent="flex-start"
-      padding={(theme) => theme.spacing(isMobileDevice ? 0.5 : 2.5)}
-      bgcolor={(theme) => alpha(theme.palette.action.hover, 0.025)}
+      padding={(theme) => theme.spacing(isMobileDevice ? 0.5 : 0.85)}
+      bgcolor={(theme) => alpha(theme.palette.action.hover, 0.005)}
       {...others}
     >
       {children}

@@ -4,8 +4,9 @@ interface IProps extends StackProps {}
 export default function FluidContainer({ children, ...others }: IProps) {
   return (
     <Stack
-      flex={1}
-      bgcolor={(theme) => alpha(theme.palette.common.black, 0.065)}
+      width="100%"
+      height="100%"
+      bgcolor={(theme) => alpha(theme.palette.common.black, 0.015)}
       {...others}
     >
       {children}

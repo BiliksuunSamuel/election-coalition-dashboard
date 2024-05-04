@@ -1,5 +1,10 @@
 import { Route, Routes } from "react-router-dom";
-import { AuthGuard, AuthPage, LoginPage } from "../pages/auth";
+import {
+  AuthGuard,
+  AuthPage,
+  LoginPage,
+  VerificationPage,
+} from "../pages/auth";
 
 export default function AuthRouter() {
   return (
@@ -13,6 +18,7 @@ export default function AuthRouter() {
         }
       >
         <Route path="" element={<LoginPage />} />
+        <Route path="verify-otp" element={<VerificationPage />} />
       </Route>
     </Routes>
   );
