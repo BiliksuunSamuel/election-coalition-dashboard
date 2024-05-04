@@ -12,7 +12,7 @@ export default function LoginPage() {
       padding={4}
     >
       <Stack
-        width="80%"
+        width="50%"
         height="80%"
         sx={(theme) => ({
           bgcolor: alpha(theme.palette.common.black, 0.065),
@@ -24,11 +24,9 @@ export default function LoginPage() {
             0.015
           )}`,
         })}
-        direction="row"
       >
         <Stack
           sx={(theme) => ({
-            width: "50%",
             height: "100%",
             bgcolor: theme.palette.common.white,
             alignItems: "center",
@@ -59,22 +57,6 @@ export default function LoginPage() {
             />
             <PrimaryButton>Login</PrimaryButton>
           </Stack>
-        </Stack>
-        <Stack
-          width="40%"
-          height="100%"
-          alignItems="center"
-          justifyContent="center"
-          padding={2}
-        >
-          <Stack>
-            <img src={resources.welcomeVector} alt="welcome-vector" />
-          </Stack>
-          <Title variant="h5">Digital Election Coalition System</Title>
-          <Paragraph width="80%" textAlign="center">
-            Record and monitor all your pollings, track and get real time live
-            feeds as results are being uploaded.
-          </Paragraph>
         </Stack>
       </Stack>
     </FluidContainer>
