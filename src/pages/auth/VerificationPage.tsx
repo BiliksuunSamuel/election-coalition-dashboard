@@ -1,7 +1,6 @@
-import { InputAdornment, Stack, alpha } from "@mui/material";
+import { Stack, alpha } from "@mui/material";
 import { FluidContainer } from "../../views";
 import {
-  CustomInput,
   CustomOtpInput,
   Paragraph,
   PrimaryButton,
