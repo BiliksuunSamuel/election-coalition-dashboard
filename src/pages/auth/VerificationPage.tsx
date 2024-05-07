@@ -1,38 +1,49 @@
-import { Stack, alpha } from "@mui/material";
-import { FluidContainer } from "../../views";
+import { Stack, useMediaQuery, useTheme } from "@mui/material";
+import { FluidContainer, ResponseModal, RowContainer } from "../../views";
 import {
   CustomOtpInput,
+  InkButton,
   Paragraph,
   PrimaryButton,
   SizedBox,
   Title,
 } from "../../components";
 import resources from "../../resources";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import useAuth from "../../hooks/useAuth";
+import { clearResponse } from "../../features/ResponseReducer";
 
 export default function VerificationPage() {
-  const navigation = useNavigate();
-  const [code, setCode] = useState("");
+  const dispatch = useAppDispatch();
+  const { prefix } = useAppSelector((state) => state.AuthReducer);
+  const {
+    handleResendCode,
+    handleVerifyCode,
+    verificationCode,
+    setVerificationCode,
+  } = useAuth();
+  const { user } = useAppSelector((state) => state.AuthReducer);
+  const { loading, error } = useAppSelector((state) => state.ResponseReducer);
+  const isMobile = useMediaQuery(useTheme().breakpoints.down("sm"));
   return (
-    <FluidContainer alignItems="center" justifyContent="center" padding={4}>
-      <Stack
-        width="50%"
-        height="80%"
-        sx={(theme) => ({
-          bgcolor: alpha(theme.palette.common.black, 0.065),
-          borderRadius: theme.spacing(1),
-          overflow: "hidden",
-          padding: 0,
-        })}
-      >
+    <FluidContainer
+      alignItems="center"
+      justifyContent="center"
+      width={undefined}
+      padding={isMobile ? 2 : 4}
+    >
+      <ResponseModal
+        variant="error"
+        open={Boolean(error)}
+        message={error}
+        title="Error"
+        handleDone={() => dispatch(clearResponse())}
+      />
+
+      <Stack width={isMobile ? "100%" : "50%"}>
         <Stack
-          sx={(theme) => ({
+          sx={() => ({
             height: "100%",
-            bgcolor: theme.palette.common.white,
-            alignItems: "center",
-            justifyContent: "center",
-            padding: theme.spacing(4),
           })}
         >
           <Stack
@@ -40,24 +51,48 @@ export default function VerificationPage() {
             spacing={1}
             alignItems="center"
             justifyContent="center"
+            width="100%"
+            alignSelf="center"
           >
             <Stack marginY={2}>
               <img src={resources.logo} alt="app-logo" />
             </Stack>
-            <Title variant="h4">Enter Verification Code</Title>
-            <Paragraph>
-              A verification code has been sent to 233550465223
+            <Title textAlign="center" variant="h4">
+              Enter Verification Code
+            </Title>
+            <Paragraph textAlign="center">
+              A verification code has been sent to {user?.phoneNumber}
             </Paragraph>
           </Stack>
-          <Stack width="80%" spacing={2}>
-            <CustomOtpInput code={code} handleChange={(c) => setCode(c)} />
+          <Stack
+            alignSelf="center"
+            alignItems="center"
+            width="100%"
+            spacing={2}
+          >
+            <RowContainer>
+              <Title fontSize={(theme) => theme.spacing(2)}>{prefix}</Title>
+              <span style={{ fontSize: "22px" }}>-</span>
+              <CustomOtpInput
+                code={verificationCode}
+                handleChange={(c) => setVerificationCode(c)}
+              />
+            </RowContainer>
             <SizedBox height={1} />
             <PrimaryButton
-              style={{ width: "80%", alignSelf: "center" }}
-              onClick={() => navigation("/dashboard")}
+              style={{ width: isMobile ? "80%" : "60%", alignSelf: "center" }}
+              onClick={handleVerifyCode}
+              loading={loading}
+              disabled={loading}
             >
               Login
             </PrimaryButton>
+            <RowContainer>
+              <Paragraph>Didn't receive code?</Paragraph>
+              <InkButton disabled={loading} onClick={handleResendCode}>
+                Resend
+              </InkButton>
+            </RowContainer>
           </Stack>
         </Stack>
       </Stack>

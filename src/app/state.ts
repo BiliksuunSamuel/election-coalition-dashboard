@@ -9,4 +9,5 @@ export const ResponseReducerState: IResponseReducerState = {
 export const UserReducerState: IUserReducerState = {
   user: null,
   token: null,
+  prefix: null,
 };

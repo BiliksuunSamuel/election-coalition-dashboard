@@ -12,20 +12,30 @@ export default function AuthGuard({ children, ...others }: IProps) {
   const location = useLocation();
 
   useEffect(() => {
-    if (user && token) {
+    if (user && token && user.authenticated) {
       const pathname = location.pathname;
-      navigation(pathname !== "/" ? pathname : "/dashboard");
+      navigation(
+        pathname !== "/" && pathname !== "/verify-otp" ? pathname : "/dashboard"
+      );
+    }
+    if (user && token && !user.authenticated) {
+      navigation("/verify-otp");
     }
     if (!user || !token) {
       dispatch(handleLogout());
       navigation("/");
     }
-  }, [user, token]);
+  }, [user, token, user?.authenticated]);
 
   useEffect(() => {
-    if (user && token) {
+    if (user && token && user.authenticated) {
       const pathname = location.pathname;
-      navigation(pathname !== "/" ? pathname : "/dashboard");
+      navigation(
+        pathname !== "/" && pathname !== "/verify-otp" ? pathname : "/dashboard"
+      );
+    }
+    if (user && token && !user.authenticated) {
+      navigation("/verify-otp");
     }
     if (!user || !token) {
       dispatch(handleLogout());

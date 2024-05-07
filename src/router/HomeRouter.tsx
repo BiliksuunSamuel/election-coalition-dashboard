@@ -7,11 +7,19 @@ import {
   ProfileSettingsPage,
   UserManagementPage,
 } from "../pages/home";
+import { AuthGuard } from "../pages/auth";
 
 export default function HomeRouter() {
   return (
     <Routes>
-      <Route path="/dashboard" element={<HomePage />}>
+      <Route
+        path="/dashboard"
+        element={
+          <AuthGuard>
+            <HomePage />
+          </AuthGuard>
+        }
+      >
         <Route path="user-management" element={<UserManagementPage />} />
         <Route
           path="election-management"

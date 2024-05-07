@@ -8,11 +8,13 @@ export default interface IUser extends IBaseEntity {
   constituencies: string[];
   address: string;
   profileImage: string;
+  authenticated: boolean;
 }
 
 export interface IAuthResponse {
   user: IUser;
-  token: string;
+  token: string | null;
+  prefix: string | null;
 }
 
 export interface ILoginRequest {
@@ -22,5 +24,5 @@ export interface ILoginRequest {
 
 export const InitialLoginRequest: ILoginRequest = {
   username: "",
-  password: "",
+  password: "******",
 };

@@ -18,24 +18,10 @@ export default function CustomOtpInput({ code, handleChange }: IProps) {
       inputStyle={{
         width: theme.spacing(6),
         height: theme.spacing(5.25),
-        margin: `0 ${theme.spacing(1.5)}`,
+        margin: `0 ${theme.spacing(0.5)}`,
         fontSize: theme.spacing(3),
       }}
-      containerStyle={{ alignSelf: "center" }}
+      containerStyle={{ alignSelf: "center", flex: 1 }}
     />
   );
 }
-
-//   renderInput={({ style, placeholder, ...props }) => (
-//     <CustomInput
-//       placeholder="0"
-//       style={{
-//         width: "60px",
-//         height: "50px",
-//         fontSize: theme.spacing(4.5),
-//         textAlign: "center",
-//         margin: "0px 15px",
-//       }}
-//       {...props}
-//     />
-//   )}

@@ -9,4 +9,5 @@ export interface IResponseReducerState {
 export interface IUserReducerState {
   user: IUser | null;
   token: string | null;
+  prefix: string | null;
 }
