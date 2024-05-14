@@ -19,7 +19,10 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     backgroundColor:
       theme.palette.mode === "light" ? theme.palette.common.white : "#1A2027",
     border: `1px solid ${alpha(theme.palette.common.black, 0.5)}`,
-    borderColor: theme.palette.mode === "light" ? "#E0E3E7" : "#2D3843",
+    borderColor:
+      theme.palette.mode === "light"
+        ? alpha(theme.palette.common.black, 0.25)
+        : "#2D3843",
     fontSize: theme.spacing(1.65),
     padding: theme.spacing(0.5, 1.5),
     transition: theme.transitions.create([

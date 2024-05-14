@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Stack, alpha } from "@mui/material";
 import { IModalProps } from "../interfaces";
 import { FaCheck } from "react-icons/fa6";
 import Title from "../components/Title";
@@ -49,8 +49,16 @@ export default function ResponseDialogModal({
           >
             {variant === "success" ? <FaCheck fontSize={38} /> : <FaTimes />}
           </Stack>
-          <Title textAlign="center">{title}</Title>
-          <Paragraph textAlign="center">{message}</Paragraph>
+          <Title variant="h4" textAlign="center">
+            {title}
+          </Title>
+          <Paragraph
+            variant="h5"
+            color={(theme) => alpha(theme.palette.common.black, 0.85)}
+            textAlign="center"
+          >
+            {message}
+          </Paragraph>
           <PrimaryButton
             onClick={handleDone}
             style={{ height: "30px" }}

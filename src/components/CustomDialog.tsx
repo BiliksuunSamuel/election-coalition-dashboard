@@ -27,7 +27,7 @@ export default function CustomDialog({
           alignItems: "center",
         },
         ".MuiPaper-root": {
-          borderRadius: theme.spacing(0.5),
+          borderRadius: theme.spacing(0.85),
           backgroundColor: theme.palette.background.paper,
         },
         justifyContent: "center",

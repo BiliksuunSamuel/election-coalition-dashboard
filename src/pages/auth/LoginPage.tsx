@@ -76,6 +76,11 @@ export default function LoginPage() {
               onChange={handleLoginForm}
               style={{ height: "45px", fontSize: theme.spacing(2.25) }}
               name="username"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleLogin();
+                }
+              }}
             />
 
             {isMobile && <SizedBox height={(theme) => theme.spacing(2)} />}

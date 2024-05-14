@@ -1,4 +1,5 @@
 import { IBaseEntity } from ".";
+import { UserStatus } from "../enums/UserStatus";
 
 export default interface IUser extends IBaseEntity {
   name: string;
@@ -9,6 +10,16 @@ export default interface IUser extends IBaseEntity {
   address: string;
   profileImage: string;
   authenticated: boolean;
+  status: UserStatus;
+}
+
+export interface ICreateUserRequest {
+  name: string;
+  phoneNumber: string;
+  email: string;
+  memberShipId: string;
+  constituencies: string[];
+  address: string;
 }
 
 export interface IAuthResponse {
@@ -25,4 +36,13 @@ export interface ILoginRequest {
 export const InitialLoginRequest: ILoginRequest = {
   username: "",
   password: "******",
+};
+
+export const initialCreateUserRequest: ICreateUserRequest = {
+  name: "",
+  email: "",
+  phoneNumber: "",
+  constituencies: [],
+  memberShipId: "",
+  address: "",
 };

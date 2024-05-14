@@ -1,7 +1,7 @@
 import { MenuProps } from "@mui/material";
 import { MenuItemView, MenuView } from "../components";
-import IUser from "../models/UserModels";
 import { UserStatus } from "../enums/UserStatus";
+import IUser from "../models/UserModel";
 
 interface IProps extends MenuProps {
   handleUpdate?: () => void;

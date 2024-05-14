@@ -1,16 +1,13 @@
 import { Stack, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useAppDispatch } from "../../app/hooks";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { Hidden } from "../../components";
 import { Navbar, Sidebar } from "../components";
 import { ContentContainer } from "../../views";
 import { UserRole } from "../../enums/UserRoles";
 
 export default function HomePage() {
-  const [profileMenu, setProfileMenu] = useState<HTMLElement | null>(null);
-  const dispatch = useAppDispatch();
-  const navigation = useNavigate();
+  const [_, setProfileMenu] = useState<HTMLElement | null>(null);
   const isMobileDevice = useMediaQuery(
     useTheme().breakpoints.between("xs", "sm")
   );
