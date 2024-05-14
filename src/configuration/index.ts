@@ -3,5 +3,7 @@ interface IConfiguration {
 }
 
 export default (): IConfiguration => ({
-  baseUrl: import.meta.env.VITE_API_BASEURL,
+  baseUrl: import.meta.env.PROD
+    ? import.meta.env.VITE_API_PROD_BASEURL
+    : import.meta.env.VITE_API_BASEURL,
 });
