@@ -1,10 +1,4 @@
-import {
-  InputAdornment,
-  Stack,
-  alpha,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { InputAdornment, Stack, useMediaQuery, useTheme } from "@mui/material";
 import { FluidContainer, ResponseModal } from "../../views";
 import {
   CustomInput,
@@ -25,17 +19,13 @@ export default function LoginPage() {
   const theme = useTheme();
   const isMobile = useMediaQuery(useTheme().breakpoints.down("sm"));
   return (
-    <FluidContainer alignItems="center" justifyContent="center" padding={4}>
-      <Stack
-        width="50%"
-        height="80%"
-        sx={(theme) => ({
-          bgcolor: alpha(theme.palette.common.black, 0.065),
-          borderRadius: theme.spacing(1),
-          overflow: "hidden",
-          padding: 0,
-        })}
-      >
+    <FluidContainer
+      alignItems="center"
+      justifyContent="center"
+      width={undefined}
+      padding={4}
+    >
+      <Stack width={isMobile ? "100%" : "50%"}>
         <ResponseModal
           variant="error"
           message={error}
@@ -48,7 +38,7 @@ export default function LoginPage() {
             bgcolor: theme.palette.common.white,
             alignItems: "center",
             justifyContent: "center",
-            padding: theme.spacing(4),
+            padding: theme.spacing(isMobile ? 1 : 4),
           })}
         >
           <Stack
@@ -61,11 +51,11 @@ export default function LoginPage() {
               <img src={resources.logo} alt="app-logo" />
             </Stack>
             <Title variant="h4">Welcome back</Title>
-            <Paragraph>
+            <Paragraph textAlign="center">
               Glad to see you again, Login to your account below
             </Paragraph>
           </Stack>
-          <Stack width={isMobile ? "100%" : "70%"} spacing={2}>
+          <Stack width={isMobile ? undefined : "70%"} spacing={2}>
             <CustomInput
               startAdornment={
                 <InputAdornment position="start">+233</InputAdornment>
