@@ -1,16 +1,23 @@
-import { InputLabel, Select, Stack, alpha } from "@mui/material";
+import {
+  BaseSelectProps,
+  InputLabel,
+  Select,
+  Stack,
+  alpha,
+} from "@mui/material";
 
-export default function CustomSelect({ label, children, ...props }: any) {
+interface IProps extends BaseSelectProps {}
+export default function CustomSelect({ label, children, ...props }: IProps) {
   return (
     <Stack>
       {label && (
         <InputLabel
           sx={(theme) => ({
             fontWeight: 500,
-            fontSize: theme.spacing(2),
+            fontSize: theme.spacing(2.5),
             marginBottom: -0.5,
-            fontFamily: "Arial",
-            color: alpha(theme.palette.common.black, 0.65),
+            fontFamily: "Nunito, sans-serif",
+            color: alpha(theme.palette.common.black, 1),
           })}
           shrink
         >
@@ -29,7 +36,7 @@ export default function CustomSelect({ label, children, ...props }: any) {
             position: "relative",
             fontSize: theme.spacing(2),
             width: "100%",
-            height: "37px",
+            height: "40px",
             padding: theme.spacing(0.5),
             transition: theme.transitions.create([
               "border-color",

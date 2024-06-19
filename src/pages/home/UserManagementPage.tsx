@@ -24,8 +24,8 @@ import {
 import { PrimaryButton } from "../../components";
 import { IoIosMore } from "react-icons/io";
 import { CreateUserModal } from "../components";
-import { useElection } from "../../hooks/useElection";
 import { useEffect } from "react";
+import useConstituency from "../../hooks/useConstituency";
 
 export default function UserManagementPage() {
   const {
@@ -42,7 +42,7 @@ export default function UserManagementPage() {
   const { loading, error, message } = useAppSelector(
     (state) => state.ResponseReducer
   );
-  const { constituencies, getConstituencies } = useElection();
+  const { constituencies, getConstituencies } = useConstituency();
 
   async function loadData() {
     await Promise.all([getAllUsers(), getConstituencies()]);
@@ -61,7 +61,7 @@ export default function UserManagementPage() {
         request={createRequest}
         setCreateRequest={setCreateRequest}
         handleSubmit={handleCreateUser}
-        constituencies={constituencies}
+        constituencies={constituencies.results}
       />
       <ResponseModal
         variant="success"

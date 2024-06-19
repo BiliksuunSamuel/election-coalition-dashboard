@@ -38,10 +38,8 @@ export default function PrimaryButton({
             variant === "contained" || variant === "text"
               ? "none"
               : `1px solid ${theme.palette.primary.main}`,
-          borderRadius: theme.spacing(0.45),
-          height: "33px",
-          textTransform: "none",
-          fontSize: theme.spacing(1.5),
+          borderRadius: theme.spacing(0.85),
+          height: "40px",
         },
         "&.Mui-disabled": {
           bgcolor: alpha(theme.palette.primary.main, 0.15),

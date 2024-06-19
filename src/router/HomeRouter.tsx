@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import {
+  ConstituencyManagementPage,
   ElectionCategoryPage,
   ElectionManagementPage,
   HomePage,
@@ -28,6 +29,10 @@ export default function HomeRouter() {
         <Route path="election-categories" element={<ElectionCategoryPage />} />
         <Route path="profile-settings" element={<ProfileSettingsPage />} />
         <Route path="notifications" element={<NotificationsPage />} />
+        <Route
+          path="constituency-management"
+          element={<ConstituencyManagementPage />}
+        />
       </Route>
     </Routes>
   );

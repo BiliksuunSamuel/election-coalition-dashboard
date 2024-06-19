@@ -56,8 +56,9 @@ export default function CustomInput({
         <InputLabel
           sx={(theme) => ({
             fontWeight: 300,
-            fontSize: theme.spacing(2),
+            fontSize: theme.spacing(2.5),
             color: alpha(theme.palette.common.black, 1),
+            fontFamily: "Nunito, sans-serif",
           })}
           shrink
           htmlFor={id ?? "custom-input"}

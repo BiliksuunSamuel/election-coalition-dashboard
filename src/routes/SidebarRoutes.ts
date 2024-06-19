@@ -6,6 +6,7 @@ import { LuUsers } from "react-icons/lu";
 import { FaUsers } from "react-icons/fa";
 import { More2 } from "iconsax-react";
 import { UserRole } from "../enums/UserRoles";
+import { AiOutlinePartition } from "react-icons/ai";
 
 export default (role?: UserRole): ISidebarRoute[] => {
   const adminRoutes = [
@@ -19,6 +20,12 @@ export default (role?: UserRole): ISidebarRoute[] => {
       title: "Election Management",
       Icon: LuUsers,
       route: "/dashboard/election-management",
+    },
+
+    {
+      title: "Constituency Management",
+      route: "/dashboard/constituency-management",
+      Icon: AiOutlinePartition,
     },
 
     {
