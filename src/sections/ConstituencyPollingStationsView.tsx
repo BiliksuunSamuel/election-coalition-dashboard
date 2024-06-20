@@ -12,17 +12,24 @@ import {
 } from "@mui/material";
 import { CustomPaginationView, RowContainer } from "../views";
 import { PrimaryButton, SearchInput } from "../components";
-import { IPollingStation } from "../models/ConstituencyModal";
+import { IPollingStation } from "../models/ConstituencyModel";
+import { IPagedResults } from "../interfaces";
 
 interface IProps extends StackProps {
   handleCreatePollingStation?: () => void;
   loading: boolean;
-  pollingStations: IPollingStation[];
+  pollingStations: IPagedResults<IPollingStation>;
+  handleEditPollingStation: (pollingStation: IPollingStation) => void;
+  handlePage: (page: number) => void;
+  handleDeletePollingStation: (pollingStation: IPollingStation) => void;
 }
 export default function ConstituencyPollingStationsView({
   handleCreatePollingStation,
   loading,
   pollingStations,
+  handleEditPollingStation,
+  handlePage,
+  handleDeletePollingStation,
   ...others
 }: IProps) {
   const theme = useTheme();
@@ -47,7 +54,7 @@ export default function ConstituencyPollingStationsView({
             <TableCell align="center">Action</TableCell>
           </TableHead>
           <TableBody>
-            {pollingStations.map((pollingStation) => (
+            {pollingStations.results.map((pollingStation) => (
               <TableRow>
                 <TableCell>{pollingStation.name}</TableCell>
                 <TableCell>{pollingStation.code}</TableCell>
@@ -61,6 +68,7 @@ export default function ConstituencyPollingStationsView({
                         color: theme.palette.error.main,
                         borderColor: theme.palette.error.main,
                       }}
+                      onClick={() => handleDeletePollingStation(pollingStation)}
                     >
                       Delete
                     </PrimaryButton>
@@ -71,6 +79,7 @@ export default function ConstituencyPollingStationsView({
                       }}
                       size="small"
                       variant="outlined"
+                      onClick={() => handleEditPollingStation(pollingStation)}
                     >
                       Edit
                     </PrimaryButton>
@@ -82,10 +91,11 @@ export default function ConstituencyPollingStationsView({
         </Table>
       </TableContainer>
       <CustomPaginationView
-        page={1}
-        pageSize={10}
-        totalCount={0}
-        totalPages={0}
+        page={pollingStations.page}
+        pageSize={pollingStations.pageSize}
+        totalCount={pollingStations.totalCount}
+        totalPages={pollingStations.totalPages}
+        handlePage={(_, p) => handlePage(p)}
       />
     </Stack>
   );

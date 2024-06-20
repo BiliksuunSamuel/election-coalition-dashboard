@@ -1,12 +1,14 @@
 import { useState } from "react";
 import {
   IConstituency,
+  IConstituencyFilter,
   IConstituencyRequest,
   IPollingStation,
+  IPollingStationFilter,
   IPollingStationRequest,
   initialConsituencyRequest,
   initialPollingStationRequest,
-} from "../models/ConstituencyModal";
+} from "../models/ConstituencyModel";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
   clearResponse,
@@ -19,6 +21,10 @@ import { IApiResponse, IPagedResults } from "../interfaces";
 
 export default function useConstituency() {
   const dispatch = useAppDispatch();
+  const [confirmDeletePollingStation, setConfirmDeletePollingStation] =
+    useState(false);
+  const [confirmDeleteConstituency, setConfirmDeleteConstituency] =
+    useState(false);
   const [tab, setTab] = useState<string>("Constituency Details");
   const { token } = useAppSelector((state) => state.AuthReducer);
   const [showPollingStationForm, setShowPollingStationForm] = useState(false);
@@ -30,7 +36,17 @@ export default function useConstituency() {
     useState<IConstituency | null>(null);
   const [pollingStationRequest, setPollingStationRequest] =
     useState<IPollingStationRequest>(initialPollingStationRequest);
-  const [pollingStations, setPollingStations] = useState<IPollingStation[]>([]);
+  const [pollingStations, setPollingStations] = useState<
+    IPagedResults<IPollingStation>
+  >({
+    page: 1,
+    totalCount: 0,
+    totalPages: 0,
+    results: [],
+    pageSize: 5,
+  });
+  const [selectedPollingStation, setSelectedPollingStation] =
+    useState<IPollingStation | null>(null);
   const [constituencies, setConstituencies] = useState<
     IPagedResults<IConstituency>
   >({
@@ -53,13 +69,17 @@ export default function useConstituency() {
   }
 
   //get polling stations
-  async function getPollingStations(constituencyId: string) {
+  async function getPollingStations(params: IPollingStationFilter) {
     try {
+      if (!params.constituencyId) return;
       dispatch(setPending());
-      const res = await HttpClient<IApiResponse<IPollingStation[]>>({
+      const res = await HttpClient<
+        IApiResponse<IPagedResults<IPollingStation>>
+      >({
         method: "get",
-        url: `api/polling-stations/constituency/${constituencyId}`,
+        url: "api/polling-stations",
         token,
+        params,
       });
       setPollingStations(res.data);
       dispatch(clearResponse());
@@ -81,22 +101,30 @@ export default function useConstituency() {
           constituencyId: selectedConstituency?.id,
         },
       });
-      await getPollingStations(selectedConstituency?.id!);
+      await getPollingStations({
+        page: 1,
+        pageSize: 5,
+        constituencyId: selectedConstituency?.id!,
+      });
       dispatch(setMessage(res.message));
       setPollingStationRequest(initialPollingStationRequest);
+      setShowPollingStationForm(false);
     } catch (error) {
       dispatch(setError(error));
     }
   }
 
   //handle get constituencies
-  async function getConstituencies() {
+  async function getConstituencies(
+    params: IConstituencyFilter = { page: 1, pageSize: 10 }
+  ) {
     try {
       dispatch(setPending());
       const res = await HttpClient<IApiResponse<IPagedResults<IConstituency>>>({
         method: "get",
         url: "api/constituencies",
         token,
+        params,
       });
       setConstituencies(res.data);
       dispatch(clearResponse());
@@ -114,6 +142,25 @@ export default function useConstituency() {
       ...prev,
       [name]: value,
     }));
+  }
+
+  //handle delete constituency
+  async function handleDeleteConstituency() {
+    try {
+      dispatch(setPending());
+      const res = await HttpClient<IApiResponse<IConstituency>>({
+        method: "delete",
+        url: `api/constituencies/${selectedConstituency?.id}`,
+        token,
+      });
+      await getConstituencies();
+      setConfirmDeleteConstituency(false);
+      setSelectedConstituency(null);
+      setShowConstituencyForm(false);
+      dispatch(setMessage(res.message));
+    } catch (error) {
+      dispatch(setError(error));
+    }
   }
 
   //handle get constituency
@@ -137,8 +184,10 @@ export default function useConstituency() {
     try {
       dispatch(setPending());
       const res = await HttpClient<IApiResponse<IConstituency>>({
-        method: "post",
-        url: "api/constituencies",
+        method: selectedConstituency ? "patch" : "post",
+        url: selectedConstituency
+          ? `api/constituencies/${selectedConstituency?.id}`
+          : "api/constituencies",
         token,
         data: constituencyRequest,
       });
@@ -146,6 +195,51 @@ export default function useConstituency() {
       const { name, description, region } = res.data;
       setConstituencyRequest({ name, description, region });
       setSelectedConstituency(res.data);
+    } catch (error) {
+      dispatch(setError(error));
+    }
+  }
+
+  //handle delete polling station
+  async function handleDeletePollingStation() {
+    try {
+      dispatch(setPending());
+      const res = await HttpClient<IApiResponse<IPollingStation>>({
+        method: "delete",
+        url: `api/polling-stations/${selectedPollingStation?.id}/${selectedConstituency?.id}`,
+        token,
+      });
+      await getPollingStations({
+        page: 1,
+        pageSize: 5,
+        constituencyId: selectedConstituency?.id!,
+      });
+      setConfirmDeletePollingStation(false);
+      setSelectedPollingStation(null);
+      dispatch(setMessage(res.message));
+    } catch (error) {
+      dispatch(setError(error));
+    }
+  }
+
+  // handle update polling station
+  async function handleUpdatePollingStation() {
+    try {
+      dispatch(setPending());
+      const res = await HttpClient<IApiResponse<IPollingStation>>({
+        method: "patch",
+        url: `api/polling-stations/${selectedPollingStation?.id}`,
+        token,
+        data: pollingStationRequest,
+      });
+      await getPollingStations({
+        page: 1,
+        pageSize: 5,
+        constituencyId: selectedConstituency?.id!,
+      });
+      dispatch(setMessage(res.message));
+      setSelectedPollingStation(null);
+      setShowPollingStationForm(false);
     } catch (error) {
       dispatch(setError(error));
     }
@@ -175,5 +269,15 @@ export default function useConstituency() {
     tab,
     setTab,
     pollingStationRequest,
+    setSelectedPollingStation,
+    selectedPollingStation,
+    handleDeletePollingStation,
+    handleUpdatePollingStation,
+    setPollingStationRequest,
+    confirmDeletePollingStation,
+    setConfirmDeletePollingStation,
+    handleDeleteConstituency,
+    confirmDeleteConstituency,
+    setConfirmDeleteConstituency,
   };
 }

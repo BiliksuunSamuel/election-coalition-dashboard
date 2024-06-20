@@ -1,22 +1,25 @@
-import { MenuItem, Stack, StackProps } from "@mui/material";
+import { MenuItem, Stack, StackProps, useTheme } from "@mui/material";
 import { CustomInput, CustomSelect, PrimaryButton } from "../components";
 import { RowContainer } from "../views";
 import { Regions } from "../data";
-import { IConstituencyRequest } from "../models/ConstituencyModal";
+import { IConstituencyRequest } from "../models/ConstituencyModel";
 
 interface IProps extends StackProps {
   request: IConstituencyRequest;
   handleFormChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleSubmit?: () => void;
   loading: boolean;
+  handleDelete: () => void;
 }
 export default function ConstituencyFormView({
   request,
   handleFormChange,
   handleSubmit,
   loading,
+  handleDelete,
   ...others
 }: IProps) {
+  const theme = useTheme();
   return (
     <Stack spacing={2} {...others}>
       <CustomInput
@@ -64,6 +67,16 @@ export default function ConstituencyFormView({
         ))}
       </CustomSelect>
       <RowContainer justifyContent="flex-end">
+        <PrimaryButton
+          style={{
+            backgroundColor: theme.palette.error.main,
+            minWidth: "130px",
+          }}
+          color="error"
+          onClick={handleDelete}
+        >
+          Delete
+        </PrimaryButton>
         <PrimaryButton
           disabled={loading}
           loading={loading}

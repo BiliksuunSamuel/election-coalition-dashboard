@@ -5,16 +5,15 @@ import {
   CustomTab,
   Title,
 } from "../components";
-import { IModalProps } from "../interfaces";
-import { RowContainer } from "../views";
+import { IModalProps, IPagedResults } from "../interfaces";
+import { ActionConfirmationModal, RowContainer } from "../views";
 import { ConstituencyFormView, PollingStationFormView } from "../FormView";
 import { ConstituencyPollingStationsView } from "../sections";
-import useConstituency from "../hooks/useConstituency";
 import {
   IConstituencyRequest,
   IPollingStation,
   IPollingStationRequest,
-} from "../models/ConstituencyModal";
+} from "../models/ConstituencyModel";
 
 interface IProps extends IModalProps {
   handleClose?: () => void;
@@ -31,7 +30,21 @@ interface IProps extends IModalProps {
     e: React.ChangeEvent<HTMLInputElement>
   ) => void;
   handleSubmitPollingStationForm: () => void;
-  pollingStations: IPollingStation[];
+  pollingStations: IPagedResults<IPollingStation>;
+  handleUpdatePollingStation: () => void;
+  handleDeletePollingStation: () => void;
+  selectedPollingStation: IPollingStation | null;
+  setSelectedPollingStation: React.Dispatch<
+    React.SetStateAction<IPollingStation | null>
+  >;
+  showPollingStationForm: boolean;
+  setShowPollingStationForm: React.Dispatch<React.SetStateAction<boolean>>;
+  handlePollingStationPage: (page: number) => void;
+  confirmDeletePollingStation: boolean;
+  setConfirmDeletePollingStation: React.Dispatch<React.SetStateAction<boolean>>;
+  handleDeleteConstituency: () => void;
+  confirmDeleteConstituency: boolean;
+  setConfirmDeleteConstituency: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export default function ConstituencyDetailsModal({
   handleClose,
@@ -45,21 +58,56 @@ export default function ConstituencyDetailsModal({
   handleSubmitPollingStationForm,
   setTab,
   pollingStations,
+  handleUpdatePollingStation,
+  handleDeletePollingStation,
+  selectedPollingStation,
+  setSelectedPollingStation,
+  showPollingStationForm,
+  setShowPollingStationForm,
+  handlePollingStationPage,
+  confirmDeletePollingStation,
+  setConfirmDeletePollingStation,
+  handleDeleteConstituency,
+  confirmDeleteConstituency,
+  setConfirmDeleteConstituency,
   ...others
 }: IProps) {
-  const { showPollingStationForm, setShowPollingStationForm } =
-    useConstituency();
-
   return (
     <CustomDialog maxWidth="md" fullWidth showCloseIcon={false} {...others}>
       <Stack>
         <PollingStationFormView
-          handleClose={() => setShowPollingStationForm(false)}
+          handleClose={() => {
+            setShowPollingStationForm(false);
+            setSelectedPollingStation(null);
+          }}
           open={showPollingStationForm}
           request={pollingStationRequest}
           handleFormChange={handlePollingStationFormChange}
-          handleSubmit={handleSubmitPollingStationForm}
+          handleSubmit={() =>
+            selectedPollingStation
+              ? handleUpdatePollingStation()
+              : handleSubmitPollingStationForm()
+          }
           loading={loading}
+        />
+        <ActionConfirmationModal
+          open={confirmDeleteConstituency}
+          title="Delete Constituency"
+          message="Do you want to delete this constituency? this action cannot be reverted."
+          handleClose={() => {
+            setConfirmDeleteConstituency(false);
+          }}
+          handelConfirm={handleDeleteConstituency}
+        />
+        <ActionConfirmationModal
+          open={confirmDeletePollingStation}
+          title="Delete Polling Station"
+          message="Do you want to delete this polling station? this action cannot be reverted."
+          handleClose={() => {
+            setSelectedPollingStation(null);
+            setConfirmDeletePollingStation(false);
+          }}
+          handelConfirm={handleDeletePollingStation}
         />
         <RowContainer paddingY={1} paddingX={2} justifyContent="space-between">
           <Title variant="body1">Constituency Details</Title>
@@ -88,6 +136,7 @@ export default function ConstituencyDetailsModal({
               handleSubmit={handleSubmit}
               request={constituencyRequest}
               loading={loading}
+              handleDelete={() => setConfirmDeleteConstituency(true)}
             />
           )}
           {tab === "Polling Stations" && (
@@ -95,6 +144,15 @@ export default function ConstituencyDetailsModal({
               loading={loading}
               pollingStations={pollingStations}
               handleCreatePollingStation={() => setShowPollingStationForm(true)}
+              handleEditPollingStation={(pollingStation) => {
+                setSelectedPollingStation(pollingStation);
+                setShowPollingStationForm(true);
+              }}
+              handlePage={(p) => handlePollingStationPage(p)}
+              handleDeletePollingStation={(ps) => {
+                setSelectedPollingStation(ps);
+                setConfirmDeletePollingStation(true);
+              }}
             />
           )}
         </Stack>

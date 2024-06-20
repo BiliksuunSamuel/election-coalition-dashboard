@@ -12,6 +12,7 @@ import useConstituency from "../../hooks/useConstituency";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { clearResponse } from "../../features/ResponseReducer";
 import { useEffect } from "react";
+import { PollingStationStatus } from "../../enums/PollingStationStatus";
 
 export default function ConstituencyManagementPage() {
   const dispatch = useAppDispatch();
@@ -36,6 +37,18 @@ export default function ConstituencyManagementPage() {
     handlePollingStationFormChange,
     pollingStationRequest,
     pollingStations,
+    handleUpdatePollingStation,
+    handleDeletePollingStation,
+    selectedPollingStation,
+    setSelectedPollingStation,
+    setPollingStationRequest,
+    showPollingStationForm,
+    setShowPollingStationForm,
+    confirmDeletePollingStation,
+    setConfirmDeletePollingStation,
+    handleDeleteConstituency,
+    confirmDeleteConstituency,
+    setConfirmDeleteConstituency,
   } = useConstituency();
 
   async function handleLoadData() {
@@ -44,19 +57,40 @@ export default function ConstituencyManagementPage() {
 
   useEffect(() => {
     if (tab === "Polling Stations") {
-      getPollingStations(selectedConstituency?.id ?? "");
+      getPollingStations({
+        page: 1,
+        pageSize: 5,
+        constituencyId: selectedConstituency?.id!,
+      });
     }
   }, [tab]);
 
   useEffect(() => {
     if (selectedConstituency) {
       const { name, description, region } = selectedConstituency;
-      setConstituencyRequest({ name, description, region });
+      setConstituencyRequest({
+        name,
+        description,
+        region,
+      });
     } else {
-      setConstituencyRequest({ name: "", description: "", region: "" });
+      setConstituencyRequest({
+        name: "",
+        description: "",
+        region: "",
+      });
     }
   }, [selectedConstituency]);
 
+  useEffect(() => {
+    setPollingStationRequest({
+      name: selectedPollingStation?.name ?? "",
+      code: selectedPollingStation?.code ?? "",
+      address: selectedPollingStation?.address ?? "",
+      constituencyId: selectedPollingStation?.constituencyId ?? "",
+      status: selectedPollingStation?.status ?? PollingStationStatus.Closed,
+    });
+  }, [selectedPollingStation]);
   useEffect(() => {
     handleLoadData();
   }, []);
@@ -93,6 +127,24 @@ export default function ConstituencyManagementPage() {
           setSelectedConstituency(null);
         }}
         loading={loading}
+        handleUpdatePollingStation={handleUpdatePollingStation}
+        handleDeletePollingStation={handleDeletePollingStation}
+        selectedPollingStation={selectedPollingStation}
+        setSelectedPollingStation={setSelectedPollingStation}
+        showPollingStationForm={showPollingStationForm}
+        setShowPollingStationForm={setShowPollingStationForm}
+        handlePollingStationPage={(page) =>
+          getPollingStations({
+            page,
+            pageSize: 5,
+            constituencyId: selectedConstituency?.id!,
+          })
+        }
+        confirmDeletePollingStation={confirmDeletePollingStation}
+        setConfirmDeletePollingStation={setConfirmDeletePollingStation}
+        handleDeleteConstituency={handleDeleteConstituency}
+        confirmDeleteConstituency={confirmDeleteConstituency}
+        setConfirmDeleteConstituency={setConfirmDeleteConstituency}
       />
       <Stack spacing={2}>
         <RowContainer justifyContent="flex-end">
@@ -114,6 +166,7 @@ export default function ConstituencyManagementPage() {
             totalCount={constituencies.totalCount}
             totalPages={constituencies.totalPages}
             pageSize={constituencies.pageSize}
+            handlePage={(_, p) => getConstituencies({ page: p })}
           />
         </Stack>
       </Stack>

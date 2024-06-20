@@ -1,14 +1,15 @@
-import { Stack } from "@mui/material";
+import { MenuItem, Stack } from "@mui/material";
 import { IModalProps } from "../interfaces";
 import {
   CustomCloseButton,
   CustomDialog,
   CustomInput,
+  CustomSelect,
   PrimaryButton,
   Title,
 } from "../components";
 import { RowContainer } from "../views";
-import { IPollingStationRequest } from "../models/ConstituencyModal";
+import { IPollingStationRequest } from "../models/ConstituencyModel";
 
 interface IProps extends IModalProps {
   handleClose?: () => void;
@@ -48,6 +49,28 @@ export default function PollingStationFormView({
             value={request.code}
             onChange={handleFormChange}
           />
+          <CustomSelect
+            label="Status"
+            value={request.status}
+            defaultValue={request.status}
+          >
+            {["Open", "Closed"].map((status) => (
+              <MenuItem
+                onClick={() =>
+                  handleFormChange({
+                    target: {
+                      name: "status",
+                      value: status,
+                    },
+                  } as any)
+                }
+                key={status}
+                value={status}
+              >
+                {status}
+              </MenuItem>
+            ))}
+          </CustomSelect>
           <CustomInput
             name="address"
             label="Addess / Location"

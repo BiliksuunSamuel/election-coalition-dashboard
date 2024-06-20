@@ -1,4 +1,5 @@
-import { IBaseEntity } from ".";
+import { IBaseEntity, IBaseFilter } from ".";
+import { PollingStationStatus } from "../enums/PollingStationStatus";
 
 export interface IConstituency extends IBaseEntity {
   name: string;
@@ -12,6 +13,12 @@ export interface IPollingStation extends IBaseEntity {
   code: string;
   address: string;
   constituencyId: string;
+  status: PollingStationStatus;
+}
+
+export interface IConstituencyFilter extends IBaseFilter {
+  query?: string;
+  region?: string;
 }
 
 export interface IPollingStationRequest {
@@ -19,6 +26,7 @@ export interface IPollingStationRequest {
   code: string;
   address: string;
   constituencyId: string;
+  status: PollingStationStatus;
 }
 
 export interface IConstituencyRequest {
@@ -27,12 +35,20 @@ export interface IConstituencyRequest {
   region: string;
 }
 
+export interface IPollingStationFilter extends IBaseFilter {
+  query?: string;
+  status?: PollingStationStatus;
+  code?: string;
+  constituencyId: string;
+}
+
 //
 export const initialPollingStationRequest: IPollingStationRequest = {
   name: "",
   code: "",
   address: "",
   constituencyId: "",
+  status: PollingStationStatus.Closed,
 };
 
 export const initialConsituencyRequest: IConstituencyRequest = {

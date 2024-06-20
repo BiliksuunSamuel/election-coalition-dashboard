@@ -5,3 +5,8 @@ export interface IBaseEntity {
   updatedBy: string;
   createdBy: string;
 }
+
+export interface IBaseFilter {
+  page?: number;
+  pageSize?: number;
+}

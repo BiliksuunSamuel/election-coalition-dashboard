@@ -8,7 +8,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { IConstituency } from "../models/ConstituencyModal";
+import { IConstituency } from "../models/ConstituencyModel";
 import { MdMoreVert } from "react-icons/md";
 
 interface IProps extends TableContainerProps {
