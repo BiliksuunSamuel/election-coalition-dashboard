@@ -29,6 +29,23 @@ body {
     -webkit-backdrop-filter: blur(6.9px);
 }
 
+.stats-card {
+    border-radius: 19px;
+    background: #f1f1f1;
+    box-shadow: inset -5px -5px 21px #d0d0d0,
+        inset 5px 5px 21px #f1f1f1;
+}
+
+::-webkit-scrollbar {
+    width: 7px;
+    background-color: #ffffff;
+    height: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #d0d0d0;
+    border-radius: 7px;
+}
 
 /* loader csss */
 .loader {

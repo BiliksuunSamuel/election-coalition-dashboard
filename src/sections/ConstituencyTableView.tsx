@@ -18,11 +18,13 @@ interface IProps extends TableContainerProps {
   constituencies: IConstituency[];
   handleSelectConstituency: (constituency: IConstituency) => void;
   loading: boolean;
+  handleDeleteConstituency: (constituency: IConstituency) => void;
 }
 export default function ConstituencyTableView({
   constituencies,
   handleSelectConstituency,
   loading,
+  handleDeleteConstituency,
   ...others
 }: IProps) {
   const theme = useTheme();
@@ -60,6 +62,7 @@ export default function ConstituencyTableView({
                       borderColor: theme.palette.error.main,
                     }}
                     disabled={loading}
+                    onClick={() => handleDeleteConstituency(constituency)}
                   >
                     Delete
                   </PrimaryButton>

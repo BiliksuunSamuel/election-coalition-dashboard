@@ -161,9 +161,9 @@ export default function ElectionManagementPage() {
         handleDone={() => dispatch(clearResponse())}
       />
       <ContentContainer
+        padding={3}
         height="100%"
         spacing={3}
-        padding={4}
         bgcolor="transparent"
       >
         <RowContainer
@@ -182,7 +182,7 @@ export default function ElectionManagementPage() {
             Add New Election
           </PrimaryButton>
         </RowContainer>
-        <Stack borderRadius={1} spacing={2} width="100%">
+        <Stack borderRadius={1} width="100%" spacing={2}>
           <ElectionTableView
             handleViewElection={(e) => {
               setElectionId(e.id);

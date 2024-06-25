@@ -1,5 +1,6 @@
 import { Divider, Stack } from "@mui/material";
 import {
+  ActionConfirmationModal,
   CustomPaginationView,
   FluidContainer,
   ResponseModal,
@@ -111,6 +112,16 @@ export default function ConstituencyManagementPage() {
         title="Success"
         handleDone={() => dispatch(clearResponse())}
       />
+      <ActionConfirmationModal
+        open={confirmDeleteConstituency}
+        handleClose={() => {
+          setSelectedConstituency(null);
+          setConfirmDeleteConstituency(false);
+        }}
+        title="Delete Constituency"
+        message="Are you sure you want to delete this constituency? this action cannot be undone"
+        handelConfirm={() => handleDeleteConstituency()}
+      />
       <ConstituencyDetailsModal
         constituencyRequest={constituencyRequest}
         handleSubmit={handleCreateConstituency}
@@ -161,6 +172,10 @@ export default function ConstituencyManagementPage() {
             }}
             loading={loading}
             constituencies={constituencies.results}
+            handleDeleteConstituency={(data) => {
+              setSelectedConstituency(data);
+              setConfirmDeleteConstituency(true);
+            }}
           />
           <CustomPaginationView
             page={constituencies.page}

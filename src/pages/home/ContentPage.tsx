@@ -1,12 +1,22 @@
-import { Divider, Stack } from "@mui/material";
+import { Divider, Grid, Stack, useMediaQuery, useTheme } from "@mui/material";
 import { FluidContainer, ResponseModal, RowContainer } from "../../views";
-import { CustomLoader, PrimaryButton } from "../../components";
+import {
+  CustomLoader,
+  DashboardSummaryLoader,
+  PrimaryButton,
+  SizedBox,
+} from "../../components";
 import PoliticalPartiesModal from "../components/PoliticalPartiesModal";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import useParty from "../../hooks/useParty";
 import { clearResponse } from "../../features/ResponseReducer";
 import { useEffect } from "react";
 import { PartyStatus } from "../../enums/PartyStatus";
+import {
+  CandidateResultsChartView,
+  DasboardSummaryCardView,
+  ElectionResultsSummaryStats,
+} from "../components";
 
 export default function ContentPage() {
   const dispatch = useAppDispatch();
@@ -33,7 +43,7 @@ export default function ContentPage() {
   const { loading, error, message } = useAppSelector(
     (state) => state.ResponseReducer
   );
-
+  const isMobile = useMediaQuery(useTheme().breakpoints.down("sm"));
   async function loadData() {
     await Promise.all([handleGetAllParties()]);
   }
@@ -73,6 +83,8 @@ export default function ContentPage() {
         title="Error"
         handleDone={() => dispatch(clearResponse())}
       />
+
+      {/* Political parties modal section */}
       <PoliticalPartiesModal
         open={showPoliticalParties}
         handleClose={() => setShowPoliticalParties(false)}
@@ -94,13 +106,39 @@ export default function ContentPage() {
         handleFilterForm={handleFilterForm}
         handleSearch={(filter) => handleGetAllParties(filter)}
       />
-      <Stack spacing={2}>
+      <Stack spacing={2} padding={2}>
         <RowContainer justifyContent="flex-end">
           <PrimaryButton onClick={() => setShowPoliticalParties(true)}>
             Political Parties
           </PrimaryButton>
         </RowContainer>
         <Divider />
+        {loading && <DashboardSummaryLoader />}
+        {!loading && (
+          <Stack padding={2}>
+            <DasboardSummaryCardView
+              data={{
+                totalOutstandingPayments: 0,
+                totalSales: 0,
+                totalProducts: 0,
+                productsSoldCount: 0,
+              }}
+              categories={[]}
+              loading={loading}
+              loadingProductSoldCount={loading}
+              loadingProductsCount={loading}
+              loadingOutstandingSales={loading}
+              loadingTotalSales={loading}
+            />
+          </Stack>
+        )}
+        <Grid container rowSpacing={2} columnSpacing={isMobile ? 0 : 2}>
+          <Grid item sm={12} md={12} lg={7} xl={8} xs={12}>
+            <CandidateResultsChartView loading={loading} />
+            <SizedBox marginTop={2} />
+            <ElectionResultsSummaryStats loading={loading} />
+          </Grid>
+        </Grid>
       </Stack>
     </FluidContainer>
   );

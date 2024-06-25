@@ -1,7 +1,10 @@
-import { useTheme } from "@mui/material";
+import { StackProps, useTheme } from "@mui/material";
 import { PieChart } from "@mui/x-charts";
 
-export default function PollingSummaryChart() {
+interface IProps extends StackProps {
+  height?: number;
+}
+export default function PollingSummaryChart({ height = 230 }: IProps) {
   const theme = useTheme();
   return (
     <PieChart
@@ -22,7 +25,7 @@ export default function PollingSummaryChart() {
           startAngle: 0,
         },
       ]}
-      height={200}
+      height={height}
     />
   );
 }
