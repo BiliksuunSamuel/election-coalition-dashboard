@@ -17,9 +17,11 @@ import {
 import {
   ElectionCandidatesSection,
   ElectionDetailsSection,
+  ElectionPollingStatisticsSection,
   ElectionPortfoliosSection,
 } from "../sections";
 import { ElectionDetailsTabs } from "../../types";
+import { ElectionCandidateFormView } from "../../FormView";
 
 interface IProps extends IModalProps {
   handleClose?: () => void;
@@ -35,6 +37,8 @@ interface IProps extends IModalProps {
   handleCandidateRequestForm: (e: ChangeEvent<HTMLInputElement>) => void;
   candidateRequest: IElectionCandidateRequest;
   handleCreateCandidate: () => void;
+  showCandidateForm: boolean;
+  setShowCandidateForm: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function ElectionDetailsModal({
@@ -51,8 +55,44 @@ export default function ElectionDetailsModal({
   candidateRequest,
   handleCreateCandidate,
   handleCandidateRequestForm,
+  showCandidateForm,
+  setShowCandidateForm,
   ...others
 }: IProps) {
+  const [preview, setPreview] = useState<any>(null);
+
+  useEffect(() => {
+    if (candidateFile) {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(candidateFile);
+      fileReader.addEventListener("load", (e) => {
+        handleCandidateRequestForm({
+          currentTarget: {
+            name: "image",
+            id: "election_candidate_image",
+          },
+          target: {
+            value: e.target?.result as any,
+          },
+        } as any);
+        setPreview(e.target?.result);
+      });
+    } else {
+      setPreview(null);
+    }
+  }, [candidateFile]);
+
+  useEffect(() => {
+    if (candidateFile) {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(candidateFile);
+      fileReader.addEventListener("load", (e) => {
+        setPreview(e.target?.result);
+      });
+    } else {
+      setPreview(null);
+    }
+  }, []);
   const [tab, setTab] = useState<ElectionDetailsTabs>("Election Details");
   useEffect(() => {
     if (electionId) {
@@ -70,6 +110,15 @@ export default function ElectionDetailsModal({
   }, [electionId]);
   return (
     <CustomDialog {...others} showCloseIcon={false} fullWidth maxWidth={"md"}>
+      <ElectionCandidateFormView
+        open={showCandidateForm}
+        handleClose={() => setShowCandidateForm(false)}
+        portfolios={election?.portfolios ?? []}
+        candidateRequest={candidateRequest}
+        handleCandidateRequestForm={handleCandidateRequestForm}
+        preview={preview}
+        setCandidateFile={setCandidateFile}
+      />
       <Stack>
         <RowContainer paddingY={1} paddingX={2} justifyContent="space-between">
           <Title variant="body1">Edit Election</Title>
@@ -132,8 +181,13 @@ export default function ElectionDetailsModal({
               candidateRequest={candidateRequest}
               handleCandidateRequestForm={handleCandidateRequestForm}
               handleCreateCandidate={handleCreateCandidate}
+              loading={loading}
+              setShowCandidateForm={setShowCandidateForm}
+              showCandidateForm={showCandidateForm}
             />
           )}
+
+          {tab === "Statistics" && <ElectionPollingStatisticsSection />}
 
           <SizedBox marginBottom={(theme) => theme.spacing(5)} />
         </Stack>

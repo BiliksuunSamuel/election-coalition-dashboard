@@ -40,7 +40,7 @@ export default function SidebarRouteLink({ routeInfo, ...others }: IProps) {
         spacing={1.5}
       >
         <Icon fontSize="medium" />
-        <Typography variant="body2">{title}</Typography>
+        <Typography>{title}</Typography>
       </Stack>
     </IconButton>
   );

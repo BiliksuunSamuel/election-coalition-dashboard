@@ -153,12 +153,13 @@ export default function ConstituencyManagementPage() {
           </PrimaryButton>
         </RowContainer>
         <Divider />
-        <Stack spacing={2}>
+        <Stack padding={2} spacing={2}>
           <ConstituencyTableView
             handleSelectConstituency={(data) => {
               setShowConstituencyForm(true);
               setSelectedConstituency(data);
             }}
+            loading={loading}
             constituencies={constituencies.results}
           />
           <CustomPaginationView

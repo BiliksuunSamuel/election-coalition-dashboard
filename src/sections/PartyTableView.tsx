@@ -7,22 +7,23 @@ import {
   TableContainerProps,
   TableHead,
   TableRow,
-  alpha,
   useTheme,
 } from "@mui/material";
-import { IConstituency } from "../models/ConstituencyModel";
-import { RowContainer } from "../views";
 import { PrimaryButton } from "../components";
+import { RowContainer } from "../views";
+import { IParty } from "../models/PartyModel";
 
 interface IProps extends TableContainerProps {
-  constituencies: IConstituency[];
-  handleSelectConstituency: (constituency: IConstituency) => void;
+  parties: IParty[];
   loading: boolean;
+  handleEdit: (party: IParty) => void;
+  handleShowDeleteModal: (party: IParty) => void;
 }
-export default function ConstituencyTableView({
-  constituencies,
-  handleSelectConstituency,
+export default function PartyTableView({
+  parties,
   loading,
+  handleShowDeleteModal,
+  handleEdit,
   ...others
 }: IProps) {
   const theme = useTheme();
@@ -30,27 +31,21 @@ export default function ConstituencyTableView({
     <TableContainer component={Paper} variant="outlined" {...others}>
       <Table>
         <TableHead>
-          <TableRow
-            sx={(theme) => ({
-              bgcolor: alpha(theme.palette.primary.main, 0.085),
-            })}
-          >
-            <TableCell>Constituency Name</TableCell>
-            <TableCell>Created By</TableCell>
-            <TableCell align="center">Polling Stations</TableCell>
-            <TableCell align="center">Actions</TableCell>
+          <TableRow>
+            <TableCell>Full Name</TableCell>
+            <TableCell>ShortName</TableCell>
+            <TableCell>Status</TableCell>
+            <TableCell align="center">Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {constituencies.map((constituency) => (
-            <TableRow key={constituency.id}>
-              <TableCell>{constituency.name}</TableCell>
-              <TableCell>{constituency.createdBy}</TableCell>
+          {parties.map((party) => (
+            <TableRow key={party.id}>
+              <TableCell>{party.name}</TableCell>
+              <TableCell>{party.shortName}</TableCell>
+              <TableCell>{party.status}</TableCell>
               <TableCell align="center">
-                {constituency.totalPollingStations ?? 0}
-              </TableCell>
-              <TableCell size="small" align="center">
-                <RowContainer justifyContent="center">
+                <RowContainer padding={0}>
                   <PrimaryButton
                     color="error"
                     variant="outlined"
@@ -60,6 +55,7 @@ export default function ConstituencyTableView({
                       borderColor: theme.palette.error.main,
                     }}
                     disabled={loading}
+                    onClick={() => handleShowDeleteModal(party)}
                   >
                     Delete
                   </PrimaryButton>
@@ -71,9 +67,9 @@ export default function ConstituencyTableView({
                     size="small"
                     disabled={loading}
                     variant="outlined"
-                    onClick={() => handleSelectConstituency(constituency)}
+                    onClick={() => handleEdit(party)}
                   >
-                    View
+                    Edit
                   </PrimaryButton>
                 </RowContainer>
               </TableCell>

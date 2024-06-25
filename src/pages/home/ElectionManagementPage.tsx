@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { PrimaryButton } from "../../components";
+import { CustomLoader, PrimaryButton } from "../../components";
 import { useElection } from "../../hooks/useElection";
 import {
+  ActionConfirmationModal,
   ContentContainer,
   CustomPaginationView,
   FluidContainer,
@@ -15,21 +16,8 @@ import {
   ElectionDetailsModal,
 } from "../components";
 import { clearResponse } from "../../features/ResponseReducer";
-import {
-  IconButton,
-  LinearProgress,
-  Paper,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  alpha,
-} from "@mui/material";
-import dayjs from "dayjs";
-import { IoIosMore } from "react-icons/io";
+import { Stack } from "@mui/material";
+import { ElectionTableView } from "../../sections";
 
 export default function ElectionManagementPage() {
   const dispatch = useAppDispatch();
@@ -63,6 +51,14 @@ export default function ElectionManagementPage() {
     candidateRequest,
     handleCandidateRequestForm,
     handleCreateCandidate,
+    showDeletElectionModal,
+    setShowDeleteElectionModal,
+    setSelectedElection,
+    selectedElection,
+    handleDeleteElection,
+    setCreateRequest,
+    showCandidateForm,
+    setShowCandidateForm,
   } = useElection();
 
   const { loading, error, message } = useAppSelector(
@@ -74,11 +70,32 @@ export default function ElectionManagementPage() {
   }
 
   useEffect(() => {
+    if (selectedElection) {
+      setCreateRequest({
+        title: selectedElection.title,
+        category: selectedElection.category,
+        startDate: selectedElection.startDate,
+        endDate: selectedElection.endDate,
+        description: selectedElection.description,
+      });
+    } else {
+      setCreateRequest({
+        title: "",
+        category: "",
+        startDate: "",
+        endDate: "",
+        description: "",
+      });
+    }
+  }, [selectedElection]);
+
+  useEffect(() => {
     loadData();
   }, []);
 
   return (
     <FluidContainer>
+      <CustomLoader open={loading} />
       <ElectionDetailsModal
         handleClose={() => setShowElectionDetailsModal(false)}
         open={showElectionDetailsModal}
@@ -94,6 +111,18 @@ export default function ElectionManagementPage() {
         candidateRequest={candidateRequest}
         handleCandidateRequestForm={handleCandidateRequestForm}
         handleCreateCandidate={handleCreateCandidate}
+        showCandidateForm={showCandidateForm}
+        setShowCandidateForm={setShowCandidateForm}
+      />
+      <ActionConfirmationModal
+        open={showDeletElectionModal}
+        title="Delete Election"
+        message="Are you sure you want to delete this election?"
+        handleClose={() => {
+          setShowDeleteElectionModal(false);
+          setSelectedElection(null);
+        }}
+        handelConfirm={handleDeleteElection}
       />
       <CreateElectionCategoryModal
         open={showAddCategoryModal}
@@ -153,75 +182,20 @@ export default function ElectionManagementPage() {
             Add New Election
           </PrimaryButton>
         </RowContainer>
-        <Stack
-          component={Paper}
-          padding={2}
-          borderRadius={1}
-          elevation={1}
-          spacing={2}
-          width="100%"
-        >
-          <TableContainer component={Stack}>
-            {loading && (
-              <Stack marginTop={1} width="100%">
-                <LinearProgress variant="indeterminate" />
-              </Stack>
-            )}
-            <Table width="100%" size="medium">
-              <TableHead>
-                <TableRow
-                  sx={(theme) => ({
-                    bgcolor: alpha(theme.palette.primary.main, 0.085),
-                  })}
-                >
-                  <TableCell size="small" align="left">
-                    Title
-                  </TableCell>
-                  <TableCell size="small" align="left">
-                    Category
-                  </TableCell>
-                  <TableCell size="small" align="left">
-                    Start Date
-                  </TableCell>
-                  <TableCell size="small" align="left">
-                    End Date
-                  </TableCell>
-                  <TableCell size="small" align="center">
-                    Actions
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {elections.results.map((c) => (
-                  <TableRow key={c.id}>
-                    <TableCell size="small" align="left">
-                      {c.title}
-                    </TableCell>
-                    <TableCell size="small" align="left">
-                      {c.category}
-                    </TableCell>
-                    <TableCell size="small" align="left">
-                      {dayjs(c.startDate).format("DD/MM/YYYY")}
-                    </TableCell>
-                    <TableCell size="small" align="left">
-                      {dayjs(c.startDate).format("DD/MM/YYYY")}
-                    </TableCell>
-                    <TableCell size="small" align="center">
-                      <IconButton
-                        onClick={() => {
-                          setElectionId(c.id);
-                          setShowElectionDetailsModal(true);
-                        }}
-                        size="small"
-                      >
-                        <IoIosMore />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+        <Stack borderRadius={1} spacing={2} width="100%">
+          <ElectionTableView
+            handleViewElection={(e) => {
+              setElectionId(e.id);
+              setSelectedElection(e);
+              setShowElectionDetailsModal(true);
+            }}
+            loading={loading}
+            elections={elections.results}
+            handleDeleteElection={(election) => {
+              setSelectedElection(election);
+              setShowDeleteElectionModal(true);
+            }}
+          />
 
           <CustomPaginationView
             page={elections.page}

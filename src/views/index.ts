@@ -7,3 +7,4 @@ export { default as UserActionMenu } from "./UserActionMenu";
 export { default as CustomPaginationView } from "./CustomPaginationView";
 export { default as ConstituenciesMenuView } from "./ConstituenciesMenuView";
 export { default as ActionConfirmationModal } from "./ActionConfirmationModal";
+export { default as CreatePartyModal } from "./CreatePartyModal";

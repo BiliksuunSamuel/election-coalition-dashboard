@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import {
   ConstituencyManagementPage,
-  ElectionCategoryPage,
+  ContentPage,
   ElectionManagementPage,
   HomePage,
   NotificationsPage,
@@ -21,18 +21,12 @@ export default function HomeRouter() {
           </AuthGuard>
         }
       >
-        <Route path="user-management" element={<UserManagementPage />} />
-        <Route
-          path="election-management"
-          element={<ElectionManagementPage />}
-        />
-        <Route path="election-categories" element={<ElectionCategoryPage />} />
+        <Route path="" element={<ContentPage />} />
+        <Route path="users" element={<UserManagementPage />} />
+        <Route path="elections" element={<ElectionManagementPage />} />
         <Route path="profile-settings" element={<ProfileSettingsPage />} />
         <Route path="notifications" element={<NotificationsPage />} />
-        <Route
-          path="constituency-management"
-          element={<ConstituencyManagementPage />}
-        />
+        <Route path="constituencies" element={<ConstituencyManagementPage />} />
       </Route>
     </Routes>
   );

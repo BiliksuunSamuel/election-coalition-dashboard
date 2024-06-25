@@ -37,9 +37,9 @@ export default function CreateElectionModal({
 }: IProps) {
   return (
     <CustomDialog maxWidth="sm" fullWidth {...others} showCloseIcon={false}>
-      <Stack padding={4}>
+      <Stack padding={1}>
         <RowContainer justifyContent="space-between">
-          <Title variant="h5">Add Election</Title>
+          <Title variant="h5">Election Details</Title>
           <CustomCloseButton onClick={handleClose} />
         </RowContainer>
         <SizedBox height={(theme) => theme.spacing(2)} />
@@ -50,15 +50,6 @@ export default function CreateElectionModal({
             placeholder="Enter Election Title"
             label="Title"
             value={request.title}
-          />
-          <CustomInput
-            placeholder="Description"
-            label="Description"
-            multiline
-            name="description"
-            onChange={handleForm}
-            minRows={3}
-            value={request.description}
           />
           <CustomSelect value={request.category} label="Category">
             {categories.map((c) => (
@@ -81,36 +72,52 @@ export default function CreateElectionModal({
               </MenuItemView>
             ))}
           </CustomSelect>
-          <CustomDatePicker
-            onChange={(val) =>
-              handleForm({
-                currentTarget: {
-                  name: "startDate",
-                  id: "start_date_input",
-                },
-                target: {
-                  value: dayjs(val).format(),
-                },
-              } as any)
-            }
-            label="Start Date"
-            value={dayjs(request.startDate)}
+          <CustomInput
+            placeholder="Description"
+            label="Description"
+            multiline
+            name="description"
+            onChange={handleForm}
+            minRows={3}
+            value={request.description}
           />
-          <CustomDatePicker
-            onChange={(val) =>
-              handleForm({
-                currentTarget: {
-                  name: "endDate",
-                  id: "end_date_input",
-                },
-                target: {
-                  value: dayjs(val).format(),
-                },
-              } as any)
-            }
-            label="End Date"
-            value={dayjs(request.endDate)}
-          />
+
+          <RowContainer>
+            <Stack flex={1}>
+              <CustomDatePicker
+                onChange={(val) =>
+                  handleForm({
+                    currentTarget: {
+                      name: "startDate",
+                      id: "start_date_input",
+                    },
+                    target: {
+                      value: dayjs(val).format(),
+                    },
+                  } as any)
+                }
+                label="Start Date"
+                value={dayjs(request.startDate)}
+              />
+            </Stack>
+            <Stack flex={1}>
+              <CustomDatePicker
+                onChange={(val) =>
+                  handleForm({
+                    currentTarget: {
+                      name: "endDate",
+                      id: "end_date_input",
+                    },
+                    target: {
+                      value: dayjs(val).format(),
+                    },
+                  } as any)
+                }
+                label="End Date"
+                value={dayjs(request.endDate)}
+              />
+            </Stack>
+          </RowContainer>
           <SizedBox height={(theme) => theme.spacing(1)} />
           <PrimaryButton
             disabled={loading}
@@ -118,7 +125,7 @@ export default function CreateElectionModal({
             onClick={handleSubmit}
             style={{ height: "45px" }}
           >
-            Submit
+            Save Changes
           </PrimaryButton>
         </Stack>
       </Stack>

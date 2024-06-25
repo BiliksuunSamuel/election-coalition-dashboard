@@ -1,16 +1,4 @@
-import {
-  IconButton,
-  LinearProgress,
-  Paper,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  alpha,
-} from "@mui/material";
+import { Stack } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { clearResponse } from "../../features/ResponseReducer";
 import useUser from "../../hooks/useUser";
@@ -21,11 +9,11 @@ import {
   ResponseModal,
   RowContainer,
 } from "../../views";
-import { PrimaryButton } from "../../components";
-import { IoIosMore } from "react-icons/io";
+import { CustomLoader, PrimaryButton } from "../../components";
 import { CreateUserModal } from "../components";
 import { useEffect } from "react";
 import useConstituency from "../../hooks/useConstituency";
+import { UserTableView } from "../../sections";
 
 export default function UserManagementPage() {
   const {
@@ -42,17 +30,32 @@ export default function UserManagementPage() {
   const { loading, error, message } = useAppSelector(
     (state) => state.ResponseReducer
   );
-  const { constituencies, getConstituencies } = useConstituency();
+  const {
+    constituencies,
+    getConstituencies,
+    getPollingStations,
+    pollingStations,
+  } = useConstituency();
 
   async function loadData() {
-    await Promise.all([getAllUsers(), getConstituencies()]);
+    await Promise.all([getAllUsers(), getConstituencies({ pageSize: 50 })]);
   }
+
+  useEffect(() => {
+    if (createRequest.constituencyId) {
+      getPollingStations({
+        constituencyId: createRequest.constituencyId,
+        pageSize: 100,
+      });
+    }
+  }, [createRequest.constituency]);
 
   useEffect(() => {
     loadData();
   }, []);
   return (
     <FluidContainer>
+      <CustomLoader open={loading} />
       <CreateUserModal
         open={showCreateModal}
         handleForm={handleCreateUserForm}
@@ -62,6 +65,7 @@ export default function UserManagementPage() {
         setCreateRequest={setCreateRequest}
         handleSubmit={handleCreateUser}
         constituencies={constituencies.results}
+        pollingStations={pollingStations.results}
       />
       <ResponseModal
         variant="success"
@@ -96,75 +100,8 @@ export default function UserManagementPage() {
             Add New User
           </PrimaryButton>
         </RowContainer>
-        <Stack
-          component={Paper}
-          padding={2}
-          borderRadius={1}
-          elevation={1}
-          spacing={2}
-          width="100%"
-        >
-          <TableContainer component={Stack}>
-            {loading && (
-              <Stack marginTop={1} width="100%">
-                <LinearProgress variant="indeterminate" />
-              </Stack>
-            )}
-            <Table width="100%" size="medium">
-              <TableHead>
-                <TableRow
-                  sx={(theme) => ({
-                    bgcolor: alpha(theme.palette.primary.main, 0.085),
-                  })}
-                >
-                  <TableCell size="small" align="left">
-                    Name
-                  </TableCell>
-                  <TableCell size="small" align="left">
-                    Phone Number
-                  </TableCell>
-                  <TableCell size="small" align="left">
-                    Email
-                  </TableCell>
-                  <TableCell size="small" align="left">
-                    Membership ID
-                  </TableCell>
-                  <TableCell size="small" align="left">
-                    Constituencies
-                  </TableCell>
-                  <TableCell size="small" align="center">
-                    Actions
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {users.results.map((c) => (
-                  <TableRow key={c.id}>
-                    <TableCell size="small" align="left">
-                      {c.name}
-                    </TableCell>
-                    <TableCell size="small" align="left">
-                      {c.phoneNumber}
-                    </TableCell>
-                    <TableCell size="small" align="left">
-                      {c.email}
-                    </TableCell>
-                    <TableCell size="small" align="left">
-                      {c.membershipId}
-                    </TableCell>
-                    <TableCell size="small" align="left">
-                      {c.constituencies.join(",")}
-                    </TableCell>
-                    <TableCell size="small" align="center">
-                      <IconButton size="small">
-                        <IoIosMore />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+        <Stack padding={2} borderRadius={1} spacing={2} width="100%">
+          <UserTableView users={users.results} loading={loading} />
 
           <CustomPaginationView
             page={users.page}

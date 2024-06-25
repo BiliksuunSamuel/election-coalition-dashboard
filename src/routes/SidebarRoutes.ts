@@ -4,7 +4,6 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { LuUsers } from "react-icons/lu";
 import { FaUsers } from "react-icons/fa";
-import { More2 } from "iconsax-react";
 import { UserRole } from "../enums/UserRoles";
 import { AiOutlinePartition } from "react-icons/ai";
 
@@ -12,26 +11,20 @@ export default (role?: UserRole): ISidebarRoute[] => {
   const adminRoutes = [
     { title: "Dashboard", Icon: RxDashboard, route: "/dashboard" },
     {
-      title: "User Management",
+      title: "Users",
       Icon: FaUsers,
-      route: "/dashboard/user-management",
+      route: "/dashboard/users",
     },
     {
-      title: "Election Management",
+      title: "Elections",
       Icon: LuUsers,
-      route: "/dashboard/election-management",
+      route: "/dashboard/elections",
     },
 
     {
-      title: "Constituency Management",
-      route: "/dashboard/constituency-management",
+      title: "Constituencies",
+      route: "/dashboard/constituencies",
       Icon: AiOutlinePartition,
-    },
-
-    {
-      title: "Election Categories",
-      route: "/dashboard/election-categories",
-      Icon: More2,
     },
 
     {

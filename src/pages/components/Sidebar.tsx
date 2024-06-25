@@ -11,7 +11,7 @@ export default function Sidebar({ role, ...others }: IProps) {
   return (
     <Drawer
       sx={() => ({
-        width: "240px",
+        width: "200px",
         border: "none",
         zIndex: 100,
       })}
@@ -19,7 +19,7 @@ export default function Sidebar({ role, ...others }: IProps) {
       open={true}
       {...others}
     >
-      <Stack width="240px" height="100vh" padding={0} margin={0}>
+      <Stack width="200px" height="100vh" padding={0} margin={0}>
         <Stack
           height="50px"
           padding={(theme) => theme.spacing(1)}

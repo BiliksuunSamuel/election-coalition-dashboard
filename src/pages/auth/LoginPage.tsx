@@ -39,7 +39,9 @@ export default function LoginPage() {
             alignItems: "center",
             justifyContent: "center",
             padding: theme.spacing(isMobile ? 1 : 4),
+            borderRadius: theme.spacing(2),
           })}
+          className="glassmorphism"
         >
           <Stack
             marginBottom={4}

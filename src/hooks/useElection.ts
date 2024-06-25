@@ -4,7 +4,6 @@ import {
   ICategory,
   ICategoryDisplayDto,
   ICategoryRequest,
-  IConstituency,
   ICreateElectionRequest,
   IElection,
   IElectionCandidateRequest,
@@ -22,6 +21,7 @@ import {
 } from "../features/ResponseReducer";
 import HttpClient from "../controller";
 import { IApiResponse, IPagedResults } from "../interfaces";
+import { IConstituency } from "../models/ConstituencyModel";
 
 export function useElection() {
   const dispatch = useAppDispatch();
@@ -29,10 +29,14 @@ export function useElection() {
   const [createRequest, setCreateRequest] = useState<ICreateElectionRequest>(
     createElectionInitialRequest
   );
+  const [showDeletElectionModal, setShowDeleteElectionModal] = useState(false);
   const [portfolioRequest, setPortfolioRequest] =
     useState<IElectionPortfolioRequest>(initialElectionPortfolioRequest);
   const [showElectionDetailsModal, setShowElectionDetailsModal] =
     useState(false);
+  const [selectedElection, setSelectedElection] = useState<IElection | null>(
+    null
+  );
   const [electionId, setElectionId] = useState<string | null>(null);
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
   const [elections, setElections] = useState<IPagedResults<IElection>>({
@@ -49,6 +53,7 @@ export function useElection() {
   const [categoryRequest, setCategoryRequest] = useState<ICategoryRequest>(
     initialCategoryRequest
   );
+  const [showCandidateForm, setShowCandidateForm] = useState(false);
   const [loadingElectionDetails, setLoadingElectionDetails] = useState(false);
   const [election, setElection] = useState<IElection | null>(null);
   const [candidateFile, setCandidateFile] = useState<File | null>(null);
@@ -150,6 +155,24 @@ export function useElection() {
       setShowAddCategoryModal(false);
       dispatch(setMessage(res.message));
       setCategoryRequest(initialCategoryRequest);
+    } catch (error) {
+      dispatch(setError(error));
+    }
+  }
+
+  //handle delet election
+  async function handleDeleteElection() {
+    try {
+      dispatch(setPending());
+      const res = await HttpClient<IApiResponse<IElection>>({
+        method: "delete",
+        url: `api/elections/${selectedElection?.id}`,
+        token,
+      });
+      await getElections();
+      dispatch(setMessage(res.message));
+      setSelectedElection(null);
+      setShowDeleteElectionModal(false);
     } catch (error) {
       dispatch(setError(error));
     }
@@ -263,5 +286,12 @@ export function useElection() {
     handleCreateCandidate,
     constituencies,
     getConstituencies,
+    showDeletElectionModal,
+    setShowDeleteElectionModal,
+    selectedElection,
+    setSelectedElection,
+    handleDeleteElection,
+    showCandidateForm,
+    setShowCandidateForm,
   };
 }

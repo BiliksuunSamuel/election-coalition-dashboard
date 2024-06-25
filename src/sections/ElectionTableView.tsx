@@ -1,5 +1,7 @@
 import {
+  LinearProgress,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -10,46 +12,58 @@ import {
   alpha,
   useTheme,
 } from "@mui/material";
-import { IConstituency } from "../models/ConstituencyModel";
+import { IElection } from "../models/ElectionModel";
+import dayjs from "dayjs";
 import { RowContainer } from "../views";
 import { PrimaryButton } from "../components";
 
 interface IProps extends TableContainerProps {
-  constituencies: IConstituency[];
-  handleSelectConstituency: (constituency: IConstituency) => void;
+  elections: IElection[];
   loading: boolean;
+  handleViewElection: (election: IElection) => void;
+  handleDeleteElection: (election: IElection) => void;
 }
-export default function ConstituencyTableView({
-  constituencies,
-  handleSelectConstituency,
+export default function ElectionTableView({
   loading,
+  elections,
+  handleDeleteElection,
+  handleViewElection,
   ...others
 }: IProps) {
   const theme = useTheme();
   return (
-    <TableContainer component={Paper} variant="outlined" {...others}>
-      <Table>
+    <TableContainer variant="outlined" component={Paper} {...others}>
+      {loading && (
+        <Stack marginTop={1} width="100%">
+          <LinearProgress variant="indeterminate" />
+        </Stack>
+      )}
+      <Table width="100%">
         <TableHead>
           <TableRow
             sx={(theme) => ({
               bgcolor: alpha(theme.palette.primary.main, 0.085),
             })}
           >
-            <TableCell>Constituency Name</TableCell>
-            <TableCell>Created By</TableCell>
-            <TableCell align="center">Polling Stations</TableCell>
+            <TableCell align="left">Title</TableCell>
+            <TableCell align="left">Category</TableCell>
+            <TableCell align="left">Start Date</TableCell>
+            <TableCell align="left">End Date</TableCell>
             <TableCell align="center">Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {constituencies.map((constituency) => (
-            <TableRow key={constituency.id}>
-              <TableCell>{constituency.name}</TableCell>
-              <TableCell>{constituency.createdBy}</TableCell>
-              <TableCell align="center">
-                {constituency.totalPollingStations ?? 0}
+          {elections.map((c) => (
+            <TableRow key={c.id}>
+              <TableCell align="left">{c.title}</TableCell>
+              <TableCell align="left">{c.category}</TableCell>
+              <TableCell align="left">
+                {dayjs(c.startDate).format("DD/MM/YYYY")}
               </TableCell>
-              <TableCell size="small" align="center">
+              <TableCell align="left">
+                {dayjs(c.startDate).format("DD/MM/YYYY")}
+              </TableCell>
+              <TableCell align="center">
                 <RowContainer justifyContent="center">
                   <PrimaryButton
                     color="error"
@@ -60,6 +74,7 @@ export default function ConstituencyTableView({
                       borderColor: theme.palette.error.main,
                     }}
                     disabled={loading}
+                    onClick={() => handleDeleteElection(c)}
                   >
                     Delete
                   </PrimaryButton>
@@ -71,7 +86,7 @@ export default function ConstituencyTableView({
                     size="small"
                     disabled={loading}
                     variant="outlined"
-                    onClick={() => handleSelectConstituency(constituency)}
+                    onClick={() => handleViewElection(c)}
                   >
                     View
                   </PrimaryButton>

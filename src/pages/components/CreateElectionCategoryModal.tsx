@@ -30,9 +30,9 @@ export default function CreateElectionCategoryModal({
 }: IProps) {
   return (
     <CustomDialog {...others} maxWidth="xs" fullWidth showCloseIcon={false}>
-      <Stack padding={4}>
+      <Stack padding={2} paddingTop={0}>
         <RowContainer justifyContent="space-between">
-          <Title variant="h5">Add Election</Title>
+          <Title variant="h5">Add Category</Title>
           <CustomCloseButton onClick={handleClose} />
         </RowContainer>
         <SizedBox height={(theme) => theme.spacing(2)} />

@@ -7,21 +7,18 @@ import {
   TableContainerProps,
   TableHead,
   TableRow,
-  alpha,
   useTheme,
 } from "@mui/material";
-import { IConstituency } from "../models/ConstituencyModel";
+import { IElectionCandidate } from "../models/ElectionModel";
 import { RowContainer } from "../views";
 import { PrimaryButton } from "../components";
 
 interface IProps extends TableContainerProps {
-  constituencies: IConstituency[];
-  handleSelectConstituency: (constituency: IConstituency) => void;
+  candidates: IElectionCandidate[];
   loading: boolean;
 }
-export default function ConstituencyTableView({
-  constituencies,
-  handleSelectConstituency,
+export default function ElectionCandidatesTableView({
+  candidates,
   loading,
   ...others
 }: IProps) {
@@ -30,26 +27,24 @@ export default function ConstituencyTableView({
     <TableContainer component={Paper} variant="outlined" {...others}>
       <Table>
         <TableHead>
-          <TableRow
-            sx={(theme) => ({
-              bgcolor: alpha(theme.palette.primary.main, 0.085),
-            })}
-          >
-            <TableCell>Constituency Name</TableCell>
-            <TableCell>Created By</TableCell>
-            <TableCell align="center">Polling Stations</TableCell>
-            <TableCell align="center">Actions</TableCell>
+          <TableRow>
+            <TableCell size="small">No.</TableCell>
+            <TableCell size="small">Name</TableCell>
+            <TableCell size="small">Portfolio</TableCell>
+            <TableCell size="small">Affialiation</TableCell>
+            <TableCell align="center" size="small">
+              Action
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {constituencies.map((constituency) => (
-            <TableRow key={constituency.id}>
-              <TableCell>{constituency.name}</TableCell>
-              <TableCell>{constituency.createdBy}</TableCell>
-              <TableCell align="center">
-                {constituency.totalPollingStations ?? 0}
-              </TableCell>
-              <TableCell size="small" align="center">
+          {candidates.map((c, index) => (
+            <TableRow key={index}>
+              <TableCell size="small">{index + 1}</TableCell>
+              <TableCell size="small">{c.name}</TableCell>
+              <TableCell size="small">{c.portfolio}</TableCell>
+              <TableCell size="small">{c.affiliation}</TableCell>
+              <TableCell size="small">
                 <RowContainer justifyContent="center">
                   <PrimaryButton
                     color="error"
@@ -58,6 +53,7 @@ export default function ConstituencyTableView({
                     style={{
                       color: loading ? undefined : theme.palette.error.main,
                       borderColor: theme.palette.error.main,
+                      height: "35px",
                     }}
                     disabled={loading}
                   >
@@ -67,11 +63,11 @@ export default function ConstituencyTableView({
                     style={{
                       color: loading ? undefined : theme.palette.info.main,
                       borderColor: theme.palette.info.main,
+                      height: "35px",
                     }}
                     size="small"
                     disabled={loading}
                     variant="outlined"
-                    onClick={() => handleSelectConstituency(constituency)}
                   >
                     View
                   </PrimaryButton>

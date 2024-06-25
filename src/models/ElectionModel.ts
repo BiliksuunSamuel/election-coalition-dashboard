@@ -10,11 +10,6 @@ export interface IElection extends IBaseEntity {
   candidates: IElectionCandidate[];
 }
 
-export interface IConstituency {
-  id: string;
-  name: string;
-}
-
 export interface IElectionCandidate {
   name: string;
   affiliation: string;

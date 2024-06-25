@@ -1,5 +1,7 @@
 import {
+  LinearProgress,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -10,44 +12,68 @@ import {
   alpha,
   useTheme,
 } from "@mui/material";
-import { IConstituency } from "../models/ConstituencyModel";
+import IUser from "../models/UserModel";
 import { RowContainer } from "../views";
 import { PrimaryButton } from "../components";
 
 interface IProps extends TableContainerProps {
-  constituencies: IConstituency[];
-  handleSelectConstituency: (constituency: IConstituency) => void;
   loading: boolean;
+  users: IUser[];
 }
-export default function ConstituencyTableView({
-  constituencies,
-  handleSelectConstituency,
-  loading,
-  ...others
-}: IProps) {
+
+export default function UserTableView({ loading, users, ...others }: IProps) {
   const theme = useTheme();
   return (
-    <TableContainer component={Paper} variant="outlined" {...others}>
-      <Table>
+    <TableContainer variant="outlined" component={Paper} {...others}>
+      {loading && (
+        <Stack marginTop={1} width="100%">
+          <LinearProgress variant="indeterminate" />
+        </Stack>
+      )}
+      <Table width="100%" size="medium">
         <TableHead>
           <TableRow
             sx={(theme) => ({
               bgcolor: alpha(theme.palette.primary.main, 0.085),
             })}
           >
-            <TableCell>Constituency Name</TableCell>
-            <TableCell>Created By</TableCell>
-            <TableCell align="center">Polling Stations</TableCell>
-            <TableCell align="center">Actions</TableCell>
+            <TableCell size="small" align="left">
+              Name
+            </TableCell>
+            <TableCell size="small" align="left">
+              Phone Number
+            </TableCell>
+            <TableCell size="small" align="left">
+              Email
+            </TableCell>
+            <TableCell size="small" align="left">
+              Constituency
+            </TableCell>
+            <TableCell size="small" align="left">
+              Polling Station
+            </TableCell>
+            <TableCell size="small" align="center">
+              Actions
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {constituencies.map((constituency) => (
-            <TableRow key={constituency.id}>
-              <TableCell>{constituency.name}</TableCell>
-              <TableCell>{constituency.createdBy}</TableCell>
-              <TableCell align="center">
-                {constituency.totalPollingStations ?? 0}
+          {users.map((c) => (
+            <TableRow key={c.id}>
+              <TableCell size="small" align="left">
+                {c.name}
+              </TableCell>
+              <TableCell size="small" align="left">
+                {c.phoneNumber}
+              </TableCell>
+              <TableCell size="small" align="left">
+                {c.email}
+              </TableCell>
+              <TableCell size="small" align="left">
+                {c.constituency}
+              </TableCell>
+              <TableCell size="small" align="left">
+                {c.pollingStation}
               </TableCell>
               <TableCell size="small" align="center">
                 <RowContainer justifyContent="center">
@@ -71,7 +97,6 @@ export default function ConstituencyTableView({
                     size="small"
                     disabled={loading}
                     variant="outlined"
-                    onClick={() => handleSelectConstituency(constituency)}
                   >
                     View
                   </PrimaryButton>

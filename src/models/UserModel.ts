@@ -6,7 +6,11 @@ export default interface IUser extends IBaseEntity {
   phoneNumber: string;
   email: string;
   membershipId: string;
-  constituencies: string[];
+  constituency: string;
+  constituencyId: string;
+  pollingStation: string;
+  pollingStationCode: string;
+  pollingStationId: string;
   address: string;
   profileImage: string;
   authenticated: boolean;
@@ -18,7 +22,11 @@ export interface ICreateUserRequest {
   phoneNumber: string;
   email: string;
   memberShipId: string;
-  constituencies: string[];
+  constituency: string;
+  constituencyId: string;
+  pollingStation: string;
+  pollingStationCode: string;
+  pollingStationId: string;
   address: string;
 }
 
@@ -42,7 +50,11 @@ export const initialCreateUserRequest: ICreateUserRequest = {
   name: "",
   email: "",
   phoneNumber: "",
-  constituencies: [],
+  constituency: "",
+  constituencyId: "",
+  pollingStation: "",
+  pollingStationCode: "",
+  pollingStationId: "",
   memberShipId: "",
   address: "",
 };
