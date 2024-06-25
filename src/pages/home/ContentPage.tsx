@@ -4,7 +4,6 @@ import {
   CustomLoader,
   DashboardSummaryLoader,
   PrimaryButton,
-  SizedBox,
 } from "../../components";
 import PoliticalPartiesModal from "../components/PoliticalPartiesModal";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
