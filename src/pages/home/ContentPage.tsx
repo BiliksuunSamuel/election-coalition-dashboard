@@ -113,7 +113,11 @@ export default function ContentPage() {
           </PrimaryButton>
         </RowContainer>
         <Divider />
-        {loading && <DashboardSummaryLoader />}
+        {loading && (
+          <Stack padding={2}>
+            <DashboardSummaryLoader />
+          </Stack>
+        )}
         {!loading && (
           <Stack padding={2}>
             <DasboardSummaryCardView
@@ -133,9 +137,10 @@ export default function ContentPage() {
           </Stack>
         )}
         <Grid container rowSpacing={2} columnSpacing={isMobile ? 0 : 2}>
-          <Grid item sm={12} md={12} lg={7} xl={8} xs={12}>
+          <Grid item sm={12} md={12} lg={6} xl={7} xs={12}>
             <CandidateResultsChartView loading={loading} />
-            <SizedBox marginTop={2} />
+          </Grid>
+          <Grid item sm={12} md={12} lg={6} xl={5} xs={12}>
             <ElectionResultsSummaryStats loading={loading} />
           </Grid>
         </Grid>
