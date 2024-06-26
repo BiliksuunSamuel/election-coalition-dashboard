@@ -60,6 +60,7 @@ export default function ConstituencyTableView({
                     style={{
                       color: loading ? undefined : theme.palette.error.main,
                       borderColor: theme.palette.error.main,
+                      height: "35px",
                     }}
                     disabled={loading}
                     onClick={() => handleDeleteConstituency(constituency)}
@@ -70,6 +71,7 @@ export default function ConstituencyTableView({
                     style={{
                       color: loading ? undefined : theme.palette.info.main,
                       borderColor: theme.palette.info.main,
+                      height: "35px",
                     }}
                     size="small"
                     disabled={loading}

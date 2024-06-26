@@ -1,6 +1,11 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { CustomLoader, PrimaryButton } from "../../components";
+import {
+  CustomLoader,
+  Flex,
+  PrimaryButton,
+  SearchInput,
+} from "../../components";
 import { useElection } from "../../hooks/useElection";
 import {
   ActionConfirmationModal,
@@ -160,18 +165,15 @@ export default function ElectionManagementPage() {
         title="Error"
         handleDone={() => dispatch(clearResponse())}
       />
-      <ContentContainer
-        padding={3}
-        height="100%"
-        spacing={3}
-        bgcolor="transparent"
-      >
+      <ContentContainer height="100%" spacing={3} bgcolor="transparent">
         <RowContainer
           spacing={2}
           padding={0}
           width="100%"
           justifyContent="flex-end"
         >
+          <SearchInput placeholder="Search Elections....." />
+          <Flex />
           <PrimaryButton
             onClick={() => setShowAddCategoryModal(true)}
             variant="outlined"

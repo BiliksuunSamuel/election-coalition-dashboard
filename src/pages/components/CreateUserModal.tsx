@@ -13,6 +13,8 @@ import { IModalProps } from "../../interfaces";
 import { ICreateUserRequest } from "../../models/UserModel";
 import { ChangeEvent } from "react";
 import { IConstituency, IPollingStation } from "../../models/ConstituencyModel";
+import { UserRole } from "../../enums/UserRoles";
+import { UserStatus } from "../../enums/UserStatus";
 
 interface IProps extends IModalProps {
   handleClose?: () => void;
@@ -39,7 +41,7 @@ export default function CreateUserModal({
     <CustomDialog maxWidth="md" fullWidth {...others} showCloseIcon={false}>
       <Stack padding={2}>
         <RowContainer justifyContent="space-between">
-          <Title variant="h5">Add User</Title>
+          <Title variant="h5"> User Details</Title>
           <CustomCloseButton onClick={handleClose} />
         </RowContainer>
         <SizedBox height={(theme) => theme.spacing(2)} />
@@ -67,12 +69,14 @@ export default function CreateUserModal({
               placeholder="PhoneNumber"
               name="phoneNumber"
               onChange={handleForm}
+              value={request.phoneNumber}
             />
             <CustomInput
               name="membershipId"
               label="Membership ID"
               placeholder="Membership ID"
               onChange={handleForm}
+              value={request.membershipId}
             />
           </RowContainer>
 
@@ -136,7 +140,50 @@ export default function CreateUserModal({
             multiline
             minRows={3}
             onChange={handleForm}
+            value={request.address}
           />
+          <RowContainer>
+            <Stack flex={1}>
+              <CustomSelect
+                value={request.role}
+                defaultValue={request.role}
+                name="role"
+                label="Role"
+                onChange={(e) => {
+                  handleForm({
+                    currentTarget: { name: "role" },
+                    target: e.target,
+                  } as any);
+                }}
+              >
+                {Object.keys(UserRole).map((role) => (
+                  <MenuItem key={role} value={role}>
+                    {role}
+                  </MenuItem>
+                ))}
+              </CustomSelect>
+            </Stack>
+            <Stack flex={1}>
+              <CustomSelect
+                value={request.status}
+                defaultValue={request.status}
+                name="status"
+                onChange={(e) => {
+                  handleForm({
+                    currentTarget: { name: "status" },
+                    target: e.target,
+                  } as any);
+                }}
+                label="Status"
+              >
+                {Object.keys(UserStatus).map((status) => (
+                  <MenuItem key={status} value={status}>
+                    {status}
+                  </MenuItem>
+                ))}
+              </CustomSelect>
+            </Stack>
+          </RowContainer>
 
           <RowContainer justifyContent="flex-end" width="100%">
             <PrimaryButton
@@ -145,7 +192,7 @@ export default function CreateUserModal({
               style={{ minWidth: "150px" }}
               onClick={handleSubmit}
             >
-              Submit
+              Save Details
             </PrimaryButton>
           </RowContainer>
         </Stack>

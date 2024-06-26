@@ -30,7 +30,7 @@ export default function HomePage() {
       <Hidden device="sm">
         <Sidebar role={UserRole.Admin} />
       </Hidden>
-      <Stack paddingLeft={isMobileDevice ? 0 : "200px"} flex={1}>
+      <Stack paddingLeft={isMobileDevice ? 0 : "220px"} flex={1}>
         <Navbar handleProfileMenu={(e) => setProfileMenu(e.currentTarget)} />
         <ContentContainer height="100%">
           <Outlet />

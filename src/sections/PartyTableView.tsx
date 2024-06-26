@@ -53,6 +53,7 @@ export default function PartyTableView({
                     style={{
                       color: loading ? undefined : theme.palette.error.main,
                       borderColor: theme.palette.error.main,
+                      height: "35px",
                     }}
                     disabled={loading}
                     onClick={() => handleShowDeleteModal(party)}
@@ -63,6 +64,7 @@ export default function PartyTableView({
                     style={{
                       color: loading ? undefined : theme.palette.info.main,
                       borderColor: theme.palette.info.main,
+                      height: "35px",
                     }}
                     size="small"
                     disabled={loading}

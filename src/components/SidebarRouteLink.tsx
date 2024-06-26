@@ -15,6 +15,7 @@ export default function SidebarRouteLink({ routeInfo, ...others }: IProps) {
       sx={(theme) => ({
         borderRadius: 0,
         width: "100%",
+        height: "45px",
         outlined: "none",
         diplay: "flex",
         flexDirection: "row",
@@ -22,10 +23,10 @@ export default function SidebarRouteLink({ routeInfo, ...others }: IProps) {
         justifyContent: "flex-start",
         paddingX: theme.spacing(2),
         paddingY: theme.spacing(1.5),
-        bgcolor: isActive ? theme.palette.primary.main : "inherit",
-        color: isActive ? theme.palette.common.white : "inherit",
+        bgcolor: isActive ? theme.palette.common.white : "inherit",
+        color: isActive ? theme.palette.primary.dark : theme.palette.grey[400],
         "&:hover": {
-          bgcolor: isActive ? theme.palette.primary.dark : "inherit",
+          bgcolor: isActive ? theme.palette.common.white : "inherit",
         },
       })}
       onClick={() => {

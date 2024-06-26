@@ -1,7 +1,33 @@
 import { Stack, StackProps, alpha } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import useUser from "../hooks/useUser";
+import { useEffect } from "react";
+import { isExpired } from "react-jwt";
+import { handleLogout } from "../features/AuthReducer";
 
 interface IProps extends StackProps {}
 export default function AppView({ children, ...others }: IProps) {
+  const { token } = useAppSelector((state) => state.AuthReducer);
+  const { getProfile } = useUser();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (!token || isExpired(token)) {
+      dispatch(handleLogout());
+    }
+    if (token && !isExpired(token)) {
+      getProfile();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!token || isExpired(token)) {
+      dispatch(handleLogout());
+    }
+    if (token && !isExpired(token)) {
+      getProfile();
+    }
+  }, [token]);
   return (
     <Stack
       height="100vh"

@@ -1,7 +1,5 @@
 import {
-  LinearProgress,
   Paper,
-  Stack,
   Table,
   TableBody,
   TableCell,
@@ -19,17 +17,19 @@ import { PrimaryButton } from "../components";
 interface IProps extends TableContainerProps {
   loading: boolean;
   users: IUser[];
+  handleViewDetails: (user: IUser) => void;
+  handleDeleteUser: (user: IUser) => void;
 }
 
-export default function UserTableView({ loading, users, ...others }: IProps) {
+export default function UserTableView({
+  loading,
+  handleViewDetails,
+  users,
+  ...others
+}: IProps) {
   const theme = useTheme();
   return (
     <TableContainer variant="outlined" component={Paper} {...others}>
-      {loading && (
-        <Stack marginTop={1} width="100%">
-          <LinearProgress variant="indeterminate" />
-        </Stack>
-      )}
       <Table width="100%" size="medium">
         <TableHead>
           <TableRow
@@ -51,6 +51,12 @@ export default function UserTableView({ loading, users, ...others }: IProps) {
             </TableCell>
             <TableCell size="small" align="left">
               Polling Station
+            </TableCell>
+            <TableCell size="small" align="center">
+              Role
+            </TableCell>
+            <TableCell size="small" align="center">
+              Status
             </TableCell>
             <TableCell size="small" align="center">
               Actions
@@ -76,27 +82,23 @@ export default function UserTableView({ loading, users, ...others }: IProps) {
                 {c.pollingStation}
               </TableCell>
               <TableCell size="small" align="center">
+                {c.role}
+              </TableCell>
+              <TableCell size="small" align="center">
+                {c.status}
+              </TableCell>
+              <TableCell size="small" align="center">
                 <RowContainer justifyContent="center">
-                  <PrimaryButton
-                    color="error"
-                    variant="outlined"
-                    size="small"
-                    style={{
-                      color: loading ? undefined : theme.palette.error.main,
-                      borderColor: theme.palette.error.main,
-                    }}
-                    disabled={loading}
-                  >
-                    Delete
-                  </PrimaryButton>
                   <PrimaryButton
                     style={{
                       color: loading ? undefined : theme.palette.info.main,
                       borderColor: theme.palette.info.main,
+                      height: "35px",
                     }}
                     size="small"
                     disabled={loading}
                     variant="outlined"
+                    onClick={() => handleViewDetails(c)}
                   >
                     View
                   </PrimaryButton>

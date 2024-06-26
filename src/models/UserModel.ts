@@ -1,4 +1,5 @@
 import { IBaseEntity } from ".";
+import { UserRole } from "../enums/UserRoles";
 import { UserStatus } from "../enums/UserStatus";
 
 export default interface IUser extends IBaseEntity {
@@ -15,19 +16,22 @@ export default interface IUser extends IBaseEntity {
   profileImage: string;
   authenticated: boolean;
   status: UserStatus;
+  role: UserRole;
 }
 
 export interface ICreateUserRequest {
   name: string;
   phoneNumber: string;
   email: string;
-  memberShipId: string;
+  membershipId: string;
   constituency: string;
   constituencyId: string;
   pollingStation: string;
   pollingStationCode: string;
   pollingStationId: string;
   address: string;
+  role: UserRole;
+  status: UserStatus;
 }
 
 export interface IAuthResponse {
@@ -55,6 +59,8 @@ export const initialCreateUserRequest: ICreateUserRequest = {
   pollingStation: "",
   pollingStationCode: "",
   pollingStationId: "",
-  memberShipId: "",
+  membershipId: "",
   address: "",
+  role: UserRole.User,
+  status: UserStatus.Pending,
 };

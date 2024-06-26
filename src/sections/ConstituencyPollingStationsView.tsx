@@ -67,6 +67,7 @@ export default function ConstituencyPollingStationsView({
                       style={{
                         color: theme.palette.error.main,
                         borderColor: theme.palette.error.main,
+                        height: "35px",
                       }}
                       onClick={() => handleDeletePollingStation(pollingStation)}
                     >
@@ -76,6 +77,7 @@ export default function ConstituencyPollingStationsView({
                       style={{
                         color: theme.palette.info.main,
                         borderColor: theme.palette.info.main,
+                        height: "35px",
                       }}
                       size="small"
                       variant="outlined"

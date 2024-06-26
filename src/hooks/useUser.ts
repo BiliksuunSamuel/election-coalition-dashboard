@@ -9,8 +9,10 @@ import {
   setPending,
 } from "../features/ResponseReducer";
 import HttpClient from "../controller";
+import { handleLogout, setUserInfo } from "../features/AuthReducer";
 
 export default function useUser() {
+  const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
   const { token } = useAppSelector((state) => state.AuthReducer);
   const dispatch = useAppDispatch();
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -30,6 +32,40 @@ export default function useUser() {
       ...createRequest,
       [e.currentTarget.name]: e.target.value,
     });
+  }
+
+  async function getProfile() {
+    try {
+      dispatch(setPending());
+      const res = await HttpClient<IApiResponse<IUser>>({
+        method: "get",
+        url: "api/users/profile",
+        token,
+      });
+      dispatch(setUserInfo(res.data));
+      dispatch(clearResponse());
+    } catch (_) {
+      dispatch(clearResponse());
+      dispatch(handleLogout());
+    }
+  }
+
+  //handle user update
+  async function handleUpdateUser() {
+    try {
+      dispatch(setPending());
+      const res = await HttpClient<IApiResponse<IUser>>({
+        method: "patch",
+        url: `api/users/${selectedUser?.id}`,
+        token,
+        data: createRequest,
+      });
+      dispatch(setMessage(res.message));
+      setSelectedUser(null);
+      setShowCreateModal(false);
+    } catch (error) {
+      dispatch(setError(error));
+    }
   }
 
   //handle create user
@@ -74,5 +110,9 @@ export default function useUser() {
     handleCreateUser,
     setShowCreateModal,
     showCreateModal,
+    handleUpdateUser,
+    selectedUser,
+    setSelectedUser,
+    getProfile,
   };
 }

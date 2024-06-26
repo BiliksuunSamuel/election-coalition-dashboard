@@ -9,11 +9,17 @@ import {
   ResponseModal,
   RowContainer,
 } from "../../views";
-import { CustomLoader, PrimaryButton } from "../../components";
+import {
+  CustomLoader,
+  Flex,
+  PrimaryButton,
+  SearchInput,
+} from "../../components";
 import { CreateUserModal } from "../components";
 import { useEffect } from "react";
 import useConstituency from "../../hooks/useConstituency";
 import { UserTableView } from "../../sections";
+import { initialCreateUserRequest } from "../../models/UserModel";
 
 export default function UserManagementPage() {
   const {
@@ -25,6 +31,9 @@ export default function UserManagementPage() {
     setCreateRequest,
     handleCreateUser,
     handleCreateUserForm,
+    selectedUser,
+    setSelectedUser,
+    handleUpdateUser,
   } = useUser();
   const dispatch = useAppDispatch();
   const { loading, error, message } = useAppSelector(
@@ -40,6 +49,27 @@ export default function UserManagementPage() {
   async function loadData() {
     await Promise.all([getAllUsers(), getConstituencies({ pageSize: 50 })]);
   }
+
+  useEffect(() => {
+    if (selectedUser) {
+      setCreateRequest({
+        name: selectedUser.name,
+        email: selectedUser.email,
+        phoneNumber: selectedUser.phoneNumber,
+        pollingStationId: selectedUser.pollingStationId,
+        constituencyId: selectedUser.constituencyId,
+        role: selectedUser.role,
+        status: selectedUser.status,
+        constituency: selectedUser.constituency,
+        pollingStation: selectedUser.pollingStation,
+        pollingStationCode: selectedUser.pollingStationCode,
+        address: selectedUser.address,
+        membershipId: selectedUser.membershipId,
+      });
+    } else {
+      setCreateRequest(initialCreateUserRequest);
+    }
+  }, [selectedUser]);
 
   useEffect(() => {
     if (createRequest.constituencyId) {
@@ -59,11 +89,16 @@ export default function UserManagementPage() {
       <CreateUserModal
         open={showCreateModal}
         handleForm={handleCreateUserForm}
-        handleClose={() => setShowCreateModal(false)}
+        handleClose={() => {
+          setShowCreateModal(false);
+          setSelectedUser(null);
+        }}
         loading={loading}
         request={createRequest}
         setCreateRequest={setCreateRequest}
-        handleSubmit={handleCreateUser}
+        handleSubmit={() =>
+          selectedUser ? handleUpdateUser() : handleCreateUser()
+        }
         constituencies={constituencies.results}
         pollingStations={pollingStations.results}
       />
@@ -84,24 +119,29 @@ export default function UserManagementPage() {
         title="Error"
         handleDone={() => dispatch(clearResponse())}
       />
-      <ContentContainer
-        height="100%"
-        spacing={3}
-        padding={4}
-        bgcolor="transparent"
-      >
+      <ContentContainer height="100%" spacing={1} bgcolor="transparent">
         <RowContainer
           spacing={2}
           padding={0}
           width="100%"
           justifyContent="flex-end"
         >
+          <SearchInput placeholder="Search Elections....." />
+          <Flex />
           <PrimaryButton onClick={() => setShowCreateModal(true)}>
             Add New User
           </PrimaryButton>
         </RowContainer>
         <Stack padding={2} borderRadius={1} spacing={2} width="100%">
-          <UserTableView users={users.results} loading={loading} />
+          <UserTableView
+            handleViewDetails={(data) => {
+              setSelectedUser(data);
+              setShowCreateModal(true);
+            }}
+            users={users.results}
+            loading={loading}
+            handleDeleteUser={(data) => setSelectedUser(data)}
+          />
 
           <CustomPaginationView
             page={users.page}

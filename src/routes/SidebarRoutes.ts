@@ -33,7 +33,7 @@ export default (role?: UserRole): ISidebarRoute[] => {
       route: "/dashboard/notifications",
     },
     {
-      title: "Settings",
+      title: "Profile",
       Icon: IoSettingsOutline,
       route: "/dashboard/profile-settings",
     },

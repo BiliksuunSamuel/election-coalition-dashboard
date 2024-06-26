@@ -1,4 +1,4 @@
-import { Divider, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import {
   ActionConfirmationModal,
   CustomPaginationView,
@@ -6,7 +6,12 @@ import {
   ResponseModal,
   RowContainer,
 } from "../../views";
-import { CustomLoader, PrimaryButton } from "../../components";
+import {
+  CustomLoader,
+  Flex,
+  PrimaryButton,
+  SearchInput,
+} from "../../components";
 import { ConstituencyTableView } from "../../sections";
 import { ConstituencyDetailsModal } from "../../ModalViews";
 import useConstituency from "../../hooks/useConstituency";
@@ -159,12 +164,13 @@ export default function ConstituencyManagementPage() {
       />
       <Stack spacing={2}>
         <RowContainer justifyContent="flex-end">
+          <SearchInput placeholder="Search Elections....." />
+          <Flex />
           <PrimaryButton onClick={() => setShowConstituencyForm(true)}>
             Create Constituency
           </PrimaryButton>
         </RowContainer>
-        <Divider />
-        <Stack padding={2} spacing={2}>
+        <Stack spacing={2}>
           <ConstituencyTableView
             handleSelectConstituency={(data) => {
               setShowConstituencyForm(true);

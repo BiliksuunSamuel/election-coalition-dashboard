@@ -1,7 +1,5 @@
 import {
-  LinearProgress,
   Paper,
-  Stack,
   Table,
   TableBody,
   TableCell,
@@ -33,11 +31,6 @@ export default function ElectionTableView({
   const theme = useTheme();
   return (
     <TableContainer variant="outlined" component={Paper} {...others}>
-      {loading && (
-        <Stack marginTop={1} width="100%">
-          <LinearProgress variant="indeterminate" />
-        </Stack>
-      )}
       <Table width="100%">
         <TableHead>
           <TableRow
@@ -72,6 +65,7 @@ export default function ElectionTableView({
                     style={{
                       color: loading ? undefined : theme.palette.error.main,
                       borderColor: theme.palette.error.main,
+                      height: "35px",
                     }}
                     disabled={loading}
                     onClick={() => handleDeleteElection(c)}
@@ -82,6 +76,7 @@ export default function ElectionTableView({
                     style={{
                       color: loading ? undefined : theme.palette.info.main,
                       borderColor: theme.palette.info.main,
+                      height: "35px",
                     }}
                     size="small"
                     disabled={loading}
