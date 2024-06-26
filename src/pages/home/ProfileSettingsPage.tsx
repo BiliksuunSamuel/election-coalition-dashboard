@@ -1,7 +1,12 @@
 import { Divider, Stack, Typography } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import useUser from "../../hooks/useUser";
-import { FluidContainer, ResponseModal, RowContainer } from "../../views";
+import {
+  ContentContainer,
+  FluidContainer,
+  ResponseModal,
+  RowContainer,
+} from "../../views";
 import { clearResponse } from "../../features/ResponseReducer";
 import { CustomInput, CustomLoader } from "../../components";
 
@@ -32,12 +37,12 @@ export default function ProfileSettingsPage() {
         title="Error"
         handleDone={() => dispatch(clearResponse())}
       />
-      <Stack spacing={2}>
-        <Stack spacing={2} padding={2}>
+      <ContentContainer spacing={2}>
+        <Stack width="100%" spacing={2} padding={2}>
           <Typography variant="h5">Profile Details</Typography>
           <Divider />
           {user && (
-            <Stack spacing={1.85}>
+            <Stack width="100%" spacing={1.85}>
               <RowContainer>
                 <CustomInput
                   name="name"
@@ -99,7 +104,7 @@ export default function ProfileSettingsPage() {
             </Stack>
           )}
         </Stack>
-      </Stack>
+      </ContentContainer>
     </FluidContainer>
   );
 }

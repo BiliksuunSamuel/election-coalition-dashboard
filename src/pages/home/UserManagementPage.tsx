@@ -84,7 +84,7 @@ export default function UserManagementPage() {
     loadData();
   }, []);
   return (
-    <FluidContainer>
+    <FluidContainer style={{ overflowX: "hidden" }}>
       <CustomLoader open={loading} />
       <CreateUserModal
         open={showCreateModal}

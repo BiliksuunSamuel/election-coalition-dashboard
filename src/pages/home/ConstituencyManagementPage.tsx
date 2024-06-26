@@ -1,6 +1,7 @@
 import { Stack } from "@mui/material";
 import {
   ActionConfirmationModal,
+  ContentContainer,
   CustomPaginationView,
   FluidContainer,
   ResponseModal,
@@ -162,7 +163,7 @@ export default function ConstituencyManagementPage() {
         confirmDeleteConstituency={confirmDeleteConstituency}
         setConfirmDeleteConstituency={setConfirmDeleteConstituency}
       />
-      <Stack spacing={2}>
+      <ContentContainer spacing={2}>
         <RowContainer justifyContent="flex-end">
           <SearchInput placeholder="Search Elections....." />
           <Flex />
@@ -170,7 +171,7 @@ export default function ConstituencyManagementPage() {
             Create Constituency
           </PrimaryButton>
         </RowContainer>
-        <Stack spacing={2}>
+        <Stack width="100%" spacing={2}>
           <ConstituencyTableView
             handleSelectConstituency={(data) => {
               setShowConstituencyForm(true);
@@ -191,7 +192,7 @@ export default function ConstituencyManagementPage() {
             handlePage={(_, p) => getConstituencies({ page: p })}
           />
         </Stack>
-      </Stack>
+      </ContentContainer>
     </FluidContainer>
   );
 }
