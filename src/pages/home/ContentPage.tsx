@@ -1,4 +1,11 @@
-import { Divider, Grid, Stack, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Divider,
+  Grid,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { FluidContainer, ResponseModal, RowContainer } from "../../views";
 import {
   CustomLoader,
@@ -16,6 +23,7 @@ import {
   DasboardSummaryCardView,
   ElectionResultsSummaryStats,
 } from "../components";
+import { LuBarChart3 } from "react-icons/lu";
 
 export default function ContentPage() {
   const dispatch = useAppDispatch();
@@ -107,6 +115,12 @@ export default function ContentPage() {
       />
       <Stack spacing={2} padding={2}>
         <RowContainer justifyContent="flex-end">
+          <PrimaryButton>
+            <RowContainer spacing={0}>
+              <LuBarChart3 size={25} />
+              <Typography>Statistics</Typography>
+            </RowContainer>
+          </PrimaryButton>
           <PrimaryButton onClick={() => setShowPoliticalParties(true)}>
             Political Parties
           </PrimaryButton>
