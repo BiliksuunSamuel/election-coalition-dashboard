@@ -36,7 +36,9 @@ export default function ElectionCandidatesTableView({
             <TableCell size="small">Name</TableCell>
             <TableCell size="small">Position</TableCell>
             <TableCell size="small">Party</TableCell>
-            <TableCell size="small">Status</TableCell>
+            <TableCell align="center" size="small">
+              Status
+            </TableCell>
             <TableCell align="center" size="small">
               Action
             </TableCell>
@@ -49,7 +51,7 @@ export default function ElectionCandidatesTableView({
               <TableCell size="small">{c.name}</TableCell>
               <TableCell size="small">{c.portfolio}</TableCell>
               <TableCell size="small">{c.partyName}</TableCell>
-              <TableCell>
+              <TableCell align="center">
                 <CustomStatusChip value={c.status} />
               </TableCell>
               <TableCell size="small">

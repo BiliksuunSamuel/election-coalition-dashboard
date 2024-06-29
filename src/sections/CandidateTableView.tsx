@@ -36,7 +36,7 @@ export default function CandidateTableView({
             <TableCell>Name</TableCell>
             <TableCell>Portfolio</TableCell>
             <TableCell>Party</TableCell>
-            <TableCell>Status</TableCell>
+            <TableCell align="center">Status</TableCell>
             <TableCell align="center">Action</TableCell>
           </TableRow>
         </TableHead>
@@ -46,7 +46,7 @@ export default function CandidateTableView({
               <TableCell>{c.name}</TableCell>
               <TableCell>{c.portfolio}</TableCell>
               <TableCell>{c.partyShortName}</TableCell>
-              <TableCell>
+              <TableCell align="center">
                 <CustomStatusChip value={c.status} />
               </TableCell>
               <TableCell>
