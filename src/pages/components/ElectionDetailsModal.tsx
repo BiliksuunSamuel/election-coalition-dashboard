@@ -6,12 +6,11 @@ import {
   SizedBox,
   Title,
 } from "../../components";
-import { IModalProps } from "../../interfaces";
+import { IModalProps, IPagedResults } from "../../interfaces";
 import { RowContainer } from "../../views";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent } from "react";
 import {
   IElection,
-  IElectionCandidateRequest,
   IElectionPortfolioRequest,
 } from "../../models/ElectionModel";
 import {
@@ -21,7 +20,9 @@ import {
   ElectionPortfoliosSection,
 } from "../sections";
 import { ElectionDetailsTabs } from "../../types";
-import { ElectionCandidateFormView } from "../../FormView";
+import { IPartyLookup } from "../../models/PartyModel";
+import { ICandidate } from "../../models/CandidateModel";
+import { UserStatus } from "../../enums/UserStatus";
 
 interface IProps extends IModalProps {
   handleClose?: () => void;
@@ -32,13 +33,14 @@ interface IProps extends IModalProps {
   portfolioRequest: IElectionPortfolioRequest;
   handleCreatePortfolio: () => void;
   handlePortfolioRequestForm: (e: ChangeEvent<HTMLInputElement>) => void;
-  candidateFile: File | null;
-  setCandidateFile: React.Dispatch<React.SetStateAction<File | null>>;
-  handleCandidateRequestForm: (e: ChangeEvent<HTMLInputElement>) => void;
-  candidateRequest: IElectionCandidateRequest;
-  handleCreateCandidate: () => void;
-  showCandidateForm: boolean;
-  setShowCandidateForm: React.Dispatch<React.SetStateAction<boolean>>;
+  partiesForLookup: IPartyLookup[];
+  tab: ElectionDetailsTabs;
+  setTab: React.Dispatch<React.SetStateAction<ElectionDetailsTabs>>;
+  candidates: IPagedResults<ICandidate>;
+  handleCandidateSearch: (query: string) => void;
+  handleCandidateSelectedPage: (page: number) => void;
+  setShowElectionForm: React.Dispatch<React.SetStateAction<boolean>>;
+  updateCandidateStatus: (id: string, status: UserStatus) => void;
 }
 
 export default function ElectionDetailsModal({
@@ -50,75 +52,18 @@ export default function ElectionDetailsModal({
   portfolioRequest,
   handlePortfolioRequestForm,
   handleCreatePortfolio,
-  candidateFile,
-  setCandidateFile,
-  candidateRequest,
-  handleCreateCandidate,
-  handleCandidateRequestForm,
-  showCandidateForm,
-  setShowCandidateForm,
+  partiesForLookup,
+  tab,
+  setTab,
+  candidates,
+  handleCandidateSearch,
+  handleCandidateSelectedPage,
+  setShowElectionForm,
+  updateCandidateStatus,
   ...others
 }: IProps) {
-  const [preview, setPreview] = useState<any>(null);
-
-  useEffect(() => {
-    if (candidateFile) {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(candidateFile);
-      fileReader.addEventListener("load", (e) => {
-        handleCandidateRequestForm({
-          currentTarget: {
-            name: "image",
-            id: "election_candidate_image",
-          },
-          target: {
-            value: e.target?.result as any,
-          },
-        } as any);
-        setPreview(e.target?.result);
-      });
-    } else {
-      setPreview(null);
-    }
-  }, [candidateFile]);
-
-  useEffect(() => {
-    if (candidateFile) {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(candidateFile);
-      fileReader.addEventListener("load", (e) => {
-        setPreview(e.target?.result);
-      });
-    } else {
-      setPreview(null);
-    }
-  }, []);
-  const [tab, setTab] = useState<ElectionDetailsTabs>("Election Details");
-  useEffect(() => {
-    if (electionId) {
-      getElection();
-    }
-    setTab("Election Details");
-
-    return () => setTab("Election Details");
-  }, []);
-
-  useEffect(() => {
-    if (electionId) {
-      getElection();
-    }
-  }, [electionId]);
   return (
     <CustomDialog {...others} showCloseIcon={false} fullWidth maxWidth={"md"}>
-      <ElectionCandidateFormView
-        open={showCandidateForm}
-        handleClose={() => setShowCandidateForm(false)}
-        portfolios={election?.portfolios ?? []}
-        candidateRequest={candidateRequest}
-        handleCandidateRequestForm={handleCandidateRequestForm}
-        preview={preview}
-        setCandidateFile={setCandidateFile}
-      />
       <Stack>
         <RowContainer paddingY={1} paddingX={2} justifyContent="space-between">
           <Title variant="body1">Edit Election</Title>
@@ -163,7 +108,10 @@ export default function ElectionDetailsModal({
           </Stack>
           <SizedBox height={(theme) => theme.spacing(3.5)} />
           {tab === "Election Details" && (
-            <ElectionDetailsSection election={election} />
+            <ElectionDetailsSection
+              setShowElectionForm={setShowElectionForm}
+              election={election}
+            />
           )}
           {tab === "Portfolios" && (
             <ElectionPortfoliosSection
@@ -175,15 +123,14 @@ export default function ElectionDetailsModal({
           )}
           {tab === "Candidates" && (
             <ElectionCandidatesSection
-              candidateFile={candidateFile}
-              setCandidateFile={setCandidateFile}
               election={election}
-              candidateRequest={candidateRequest}
-              handleCandidateRequestForm={handleCandidateRequestForm}
-              handleCreateCandidate={handleCreateCandidate}
               loading={loading}
-              setShowCandidateForm={setShowCandidateForm}
-              showCandidateForm={showCandidateForm}
+              handleUpdateStatus={async (data) =>
+                await updateCandidateStatus(data.id, data.status)
+              }
+              candidates={candidates}
+              handleCandidateSearch={handleCandidateSearch}
+              handleCandidateSelectedPage={handleCandidateSelectedPage}
             />
           )}
 

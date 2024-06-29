@@ -1,48 +1,62 @@
 import { Divider, Stack, StackProps } from "@mui/material";
-import { RowContainer } from "../../views";
-import { PrimaryButton } from "../../components";
-import { ChangeEvent } from "react";
-import {
-  IElection,
-  IElectionCandidateRequest,
-} from "../../models/ElectionModel";
+import { CustomPaginationView, RowContainer } from "../../views";
+import { IElection } from "../../models/ElectionModel";
 import { ElectionCandidatesTableView } from "../../sections";
+import { IPagedResults } from "../../interfaces";
+import { ICandidate } from "../../models/CandidateModel";
+import { SearchInput } from "../../components";
+import { UserStatus } from "../../enums/UserStatus";
 
 interface IProps extends StackProps {
-  candidateFile: File | null;
-  setCandidateFile: React.Dispatch<React.SetStateAction<File | null>>;
   election: IElection | null;
-  handleCandidateRequestForm: (e: ChangeEvent<HTMLInputElement>) => void;
-  candidateRequest: IElectionCandidateRequest;
-  handleCreateCandidate: () => void;
   loading: boolean;
-  showCandidateForm: boolean;
-  setShowCandidateForm: React.Dispatch<React.SetStateAction<boolean>>;
+  handleUpdateStatus: (data: ICandidate) => void;
+  candidates: IPagedResults<ICandidate>;
+  handleCandidateSearch: (query: string) => void;
+  handleCandidateSelectedPage: (page: number) => void;
 }
 export default function ElectionCandidatesSection({
-  candidateFile,
-  setCandidateFile,
   election,
-  candidateRequest,
-  handleCandidateRequestForm,
-  handleCreateCandidate,
   loading,
-  showCandidateForm,
-  setShowCandidateForm,
+  handleUpdateStatus,
+  candidates,
+  handleCandidateSearch,
+  handleCandidateSelectedPage,
   ...others
 }: IProps) {
   return (
     <Stack spacing={2} {...others}>
-      <RowContainer justifyContent="flex-end">
-        <PrimaryButton onClick={() => setShowCandidateForm(true)}>
-          Add New
-        </PrimaryButton>
-      </RowContainer>
       <Divider />
-      <Stack>
+      <RowContainer justifyContent="flex-end">
+        <SearchInput
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleCandidateSearch(e.currentTarget.value);
+            }
+          }}
+          placeholder="Search candidate"
+        />
+      </RowContainer>
+      <Stack spacing={2}>
         <ElectionCandidatesTableView
           loading={loading}
-          candidates={election?.candidates ?? []}
+          candidates={candidates}
+          handleUpdateStatus={(data) =>
+            handleUpdateStatus({
+              ...data,
+              status:
+                data.status === UserStatus.Active
+                  ? UserStatus.Inactive
+                  : UserStatus.Active,
+            })
+          }
+        />
+        <CustomPaginationView
+          page={candidates.page}
+          pageSize={candidates.pageSize}
+          totalCount={candidates.totalCount}
+          totalPages={candidates.totalPages}
+          handlePage={(page) => handleCandidateSelectedPage(page)}
         />
       </Stack>
     </Stack>

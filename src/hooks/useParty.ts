@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   IParty,
   IPartyFilter,
+  IPartyLookup,
   IPartyRequest,
   partyRequest,
 } from "../models/PartyModel";
@@ -29,6 +30,7 @@ export default function useParty() {
     totalPages: 0,
     results: [],
   });
+  const [partiesForLookup, setPartiesForLookup] = useState<IPartyLookup[]>([]);
   const [selectedParty, setSelectedParty] = useState<IParty | null>(null);
   const [filter, setFilter] = useState<IPartyFilter>({
     page: 1,
@@ -50,6 +52,22 @@ export default function useParty() {
       [e.target.name]: e.target.value,
     });
   };
+
+  //handle get party for lookup
+  async function handleGetPartiesForLookup() {
+    try {
+      dispatch(setPending());
+      const res = await HttpClient<IApiResponse<IPartyLookup[]>>({
+        method: "get",
+        url: "api/parties/lookup",
+        token,
+      });
+      setPartiesForLookup(res.data);
+      dispatch(clearResponse());
+    } catch (error) {
+      dispatch(setError(error));
+    }
+  }
 
   //handle delete party
   async function handleDeleteParty() {
@@ -143,5 +161,7 @@ export default function useParty() {
     showDeleteModal,
     setShowDeleteModal,
     handleDeleteParty,
+    handleGetPartiesForLookup,
+    partiesForLookup,
   };
 }

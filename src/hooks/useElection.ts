@@ -6,12 +6,10 @@ import {
   ICategoryRequest,
   ICreateElectionRequest,
   IElection,
-  IElectionCandidateRequest,
   IElectionPortfolioRequest,
   createElectionInitialRequest,
   initialCategoryRequest,
   initialElectionPortfolioRequest,
-  inititialCandidateRequest,
 } from "../models/ElectionModel";
 import {
   clearResponse,
@@ -22,6 +20,7 @@ import {
 import HttpClient from "../controller";
 import { IApiResponse, IPagedResults } from "../interfaces";
 import { IConstituency } from "../models/ConstituencyModel";
+import { ElectionDetailsTabs } from "../types";
 
 export function useElection() {
   const dispatch = useAppDispatch();
@@ -29,6 +28,7 @@ export function useElection() {
   const [createRequest, setCreateRequest] = useState<ICreateElectionRequest>(
     createElectionInitialRequest
   );
+  const [showElectionForm, setShowElectionForm] = useState(false);
   const [showDeletElectionModal, setShowDeleteElectionModal] = useState(false);
   const [portfolioRequest, setPortfolioRequest] =
     useState<IElectionPortfolioRequest>(initialElectionPortfolioRequest);
@@ -53,20 +53,10 @@ export function useElection() {
   const [categoryRequest, setCategoryRequest] = useState<ICategoryRequest>(
     initialCategoryRequest
   );
-  const [showCandidateForm, setShowCandidateForm] = useState(false);
   const [loadingElectionDetails, setLoadingElectionDetails] = useState(false);
   const [election, setElection] = useState<IElection | null>(null);
-  const [candidateFile, setCandidateFile] = useState<File | null>(null);
-  const [candidateRequest, setCandidateRequest] =
-    useState<IElectionCandidateRequest>(inititialCandidateRequest);
   const [constituencies, setConstituencies] = useState<IConstituency[]>([]);
-  //handle candidate request
-  function handleCandidateRequestForm(e: ChangeEvent<HTMLInputElement>) {
-    setCandidateRequest({
-      ...candidateRequest,
-      [e.currentTarget.name]: e.target.value,
-    });
-  }
+  const [tab, setTab] = useState<ElectionDetailsTabs>("Election Details");
 
   //handle portfolio request form
   function handlePortfolioRequestForm(e: ChangeEvent<HTMLInputElement>) {
@@ -96,29 +86,6 @@ export function useElection() {
       dispatch(clearResponse());
     } catch (error) {
       dispatch(setError(error));
-    }
-  }
-
-  //handle create candiate
-  async function handleCreateCandidate() {
-    try {
-      setLoadingElectionDetails(true);
-
-      const res = await HttpClient<IApiResponse<IElection>>({
-        method: "post",
-        contentType: "application/json",
-        url: `api/elections/candidates/${electionId}`,
-        token,
-        data: candidateRequest,
-      });
-      setLoadingElectionDetails(false);
-      setElection(res.data);
-      dispatch(setMessage(res.message));
-      setCandidateRequest(inititialCandidateRequest);
-      setCandidateFile(null);
-    } catch (error) {
-      dispatch(setError(error));
-      setLoadingElectionDetails(false);
     }
   }
 
@@ -218,6 +185,27 @@ export function useElection() {
     });
   }
 
+  //handle update election
+  async function updateElection() {
+    try {
+      console.log(selectedElection);
+      dispatch(setPending());
+      const res = await HttpClient<IApiResponse<IElection>>({
+        method: "patch",
+        url: `api/elections/${selectedElection?.id}`,
+        token,
+        data: createRequest,
+      });
+      dispatch(setMessage(res.message));
+      setShowCreateElectionModal(false);
+      setCreateRequest({ ...res.data });
+      setSelectedElection(res.data);
+    } catch (error) {
+      dispatch(setError(error));
+      setLoadingElectionDetails(false);
+    }
+  }
+
   //handle create election
   async function createElection() {
     try {
@@ -279,11 +267,6 @@ export function useElection() {
     portfolioRequest,
     handlePortfolioRequestForm,
     handleCreateElectionPortfolio,
-    candidateFile,
-    setCandidateFile,
-    candidateRequest,
-    handleCandidateRequestForm,
-    handleCreateCandidate,
     constituencies,
     getConstituencies,
     showDeletElectionModal,
@@ -291,7 +274,10 @@ export function useElection() {
     selectedElection,
     setSelectedElection,
     handleDeleteElection,
-    showCandidateForm,
-    setShowCandidateForm,
+    tab,
+    setTab,
+    showElectionForm,
+    setShowElectionForm,
+    updateElection,
   };
 }

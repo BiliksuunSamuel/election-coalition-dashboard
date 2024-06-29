@@ -23,3 +23,5 @@ export { default as CustomCloseButton } from "./CustomCloseButton";
 export { default as CustomOtpInput } from "./CustomOtpInput";
 export { default as CustomLoader } from "./CustomLoader";
 export { default as DashboardSummaryLoader } from "./DashboardSummaryLoader";
+export { default as CustomOutlinedDisplay } from "./CustomOutlinedDisplay";
+export { default as CustomStatusChip } from "./CustomStatusChip";

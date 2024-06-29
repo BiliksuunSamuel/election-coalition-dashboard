@@ -18,17 +18,22 @@ import { RowContainer } from "../views";
 import { ChangeEvent } from "react";
 import { GalleryAdd } from "iconsax-react";
 import {
+  IElectionCandidate,
   IElectionCandidateRequest,
   IElectionPortfolio,
 } from "../models/ElectionModel";
+import { IPartyLookup } from "../models/PartyModel";
+import { ICandidateRequest } from "../models/CandidateModel";
 
 interface IProps extends IModalProps {
   handleClose: () => void;
   handleCandidateRequestForm: (e: ChangeEvent<HTMLInputElement>) => void;
-  candidateRequest: IElectionCandidateRequest;
+  candidateRequest: ICandidateRequest;
   portfolios: IElectionPortfolio[];
   preview: any;
   setCandidateFile: React.Dispatch<React.SetStateAction<any>>;
+  selectedCandidate: IElectionCandidate | null;
+  partiesForLookup: IPartyLookup[];
 }
 export default function ElectionCandidateFormView({
   handleCandidateRequestForm,
@@ -37,6 +42,7 @@ export default function ElectionCandidateFormView({
   handleClose,
   setCandidateFile,
   preview,
+  partiesForLookup,
   ...others
 }: IProps) {
   const theme = useTheme();
@@ -56,29 +62,41 @@ export default function ElectionCandidateFormView({
               label="Name"
               onChange={handleCandidateRequestForm}
             />
-            <CustomSelect label="Party" />
+            <CustomSelect
+              label="Party"
+              onChange={(e) =>
+                handleCandidateRequestForm({
+                  currentTarget: {
+                    name: "portfolio",
+                    id: "candidate_portfolio",
+                  },
+                  target: e.target as any,
+                } as any)
+              }
+            >
+              {partiesForLookup.map((party) => (
+                <MenuItemView value={party.name} key={party.id}>
+                  {party.name}
+                </MenuItemView>
+              ))}
+            </CustomSelect>
 
             <Stack flex={1}>
               <CustomSelect
                 value={candidateRequest.portfolio}
                 label="Portfolio"
+                onChange={(e) =>
+                  handleCandidateRequestForm({
+                    currentTarget: {
+                      name: "portfolio",
+                      id: "candidate_portfolio",
+                    },
+                    target: e.target as any,
+                  } as any)
+                }
               >
                 {portfolios.map((pf) => (
-                  <MenuItemView
-                    onClick={() =>
-                      handleCandidateRequestForm({
-                        currentTarget: {
-                          name: "portfolio",
-                          id: "candidate_portfolio",
-                        },
-                        target: {
-                          value: pf.title,
-                        },
-                      } as any)
-                    }
-                    value={pf.title}
-                    key={pf.id}
-                  >
+                  <MenuItemView value={pf.title} key={pf.id}>
                     {pf.title}
                   </MenuItemView>
                 ))}

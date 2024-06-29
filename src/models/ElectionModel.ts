@@ -17,13 +17,9 @@ export interface IElectionCandidate {
   imageUrl: string;
   portfolio: string;
   id: string;
-}
-
-export interface IElectionCandidateRequest {
-  name: string;
-  affiliation: string;
-  portfolio: string;
-  image: string | null;
+  partyName: string;
+  partyId: string;
+  partyShortName: string;
 }
 
 export interface ICategory extends IBaseEntity {
@@ -37,13 +33,6 @@ export interface IElectionPortfolio {
 export interface IElectionPortfolioRequest {
   title: string;
 }
-
-export const inititialCandidateRequest: IElectionCandidateRequest = {
-  portfolio: "",
-  affiliation: "",
-  name: "",
-  image: null,
-};
 
 export const initialElectionPortfolioRequest: IElectionPortfolioRequest = {
   title: "",

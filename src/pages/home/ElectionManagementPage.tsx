@@ -23,6 +23,9 @@ import {
 import { clearResponse } from "../../features/ResponseReducer";
 import { Stack } from "@mui/material";
 import { ElectionTableView } from "../../sections";
+import useParty from "../../hooks/useParty";
+import useCandidate from "../../hooks/useCandidate";
+import { ElectionDetailsFormView } from "../../FormView";
 
 export default function ElectionManagementPage() {
   const dispatch = useAppDispatch();
@@ -42,7 +45,6 @@ export default function ElectionManagementPage() {
     categoryRequest,
     handleCategoryRequestForm,
     showElectionDetailsModal,
-    election,
     getElection,
     electionId,
     setElectionId,
@@ -51,28 +53,55 @@ export default function ElectionManagementPage() {
     portfolioRequest,
     handleCreateElectionPortfolio,
     handlePortfolioRequestForm,
-    candidateFile,
-    setCandidateFile,
-    candidateRequest,
-    handleCandidateRequestForm,
-    handleCreateCandidate,
     showDeletElectionModal,
     setShowDeleteElectionModal,
     setSelectedElection,
     selectedElection,
     handleDeleteElection,
     setCreateRequest,
-    showCandidateForm,
-    setShowCandidateForm,
+    tab,
+    setTab,
+    showElectionForm,
+    setShowElectionForm,
+    updateElection,
   } = useElection();
+
+  const {
+    candidates,
+    filterCandidates,
+    filter: candidateFilter,
+    setFilter: setCandidateFilter,
+    updateCandidateStatus,
+  } = useCandidate();
+
+  const { partiesForLookup, handleGetPartiesForLookup } = useParty();
 
   const { loading, error, message } = useAppSelector(
     (state) => state.ResponseReducer
   );
 
   async function loadData() {
-    await Promise.all([getCategoriesForDisplay(), getElections()]);
+    await Promise.all([
+      getCategoriesForDisplay(),
+      getElections(),
+      handleGetPartiesForLookup(),
+      getElectionCandidates(),
+    ]);
   }
+
+  async function getElectionCandidates() {
+    if (tab && tab === "Candidates" && selectedElection) {
+      await filterCandidates({
+        ...candidateFilter,
+        electionId: selectedElection?.id,
+        pageSize: 5,
+      });
+    }
+  }
+
+  useEffect(() => {
+    getElectionCandidates();
+  }, [tab]);
 
   useEffect(() => {
     if (selectedElection) {
@@ -101,23 +130,47 @@ export default function ElectionManagementPage() {
   return (
     <FluidContainer>
       <CustomLoader open={loading} />
+
+      <ElectionDetailsFormView
+        handleElectionDetailsForm={handleElectionForm}
+        open={showElectionForm}
+        request={createRequest}
+        loading={loading}
+        categories={categoriesForDisplay}
+        handleClose={() => setShowElectionForm(false)}
+        handleSubmit={() =>
+          selectedElection ? updateElection() : createElection()
+        }
+      />
+
       <ElectionDetailsModal
-        handleClose={() => setShowElectionDetailsModal(false)}
+        handleClose={() => {
+          setShowElectionDetailsModal(false);
+          setTab("Election Details");
+          setSelectedElection(null);
+        }}
         open={showElectionDetailsModal}
-        election={election}
+        election={selectedElection}
         getElection={getElection}
         loading={loadingElectionDetails}
         electionId={electionId}
         portfolioRequest={portfolioRequest}
         handleCreatePortfolio={handleCreateElectionPortfolio}
         handlePortfolioRequestForm={handlePortfolioRequestForm}
-        candidateFile={candidateFile}
-        setCandidateFile={setCandidateFile}
-        candidateRequest={candidateRequest}
-        handleCandidateRequestForm={handleCandidateRequestForm}
-        handleCreateCandidate={handleCreateCandidate}
-        showCandidateForm={showCandidateForm}
-        setShowCandidateForm={setShowCandidateForm}
+        partiesForLookup={partiesForLookup}
+        tab={tab}
+        setTab={setTab}
+        candidates={candidates}
+        handleCandidateSearch={async (query) => {
+          setCandidateFilter({ ...candidateFilter, filter: query });
+          await filterCandidates({ ...candidateFilter, filter: query });
+        }}
+        handleCandidateSelectedPage={async (page) => {
+          setCandidateFilter({ ...candidateFilter, page });
+          await filterCandidates({ ...candidateFilter, page });
+        }}
+        setShowElectionForm={setShowElectionForm}
+        updateCandidateStatus={updateCandidateStatus}
       />
       <ActionConfirmationModal
         open={showDeletElectionModal}

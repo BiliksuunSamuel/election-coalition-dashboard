@@ -99,7 +99,7 @@ export default function ProfileSettingsPage() {
               <RowContainer>
                 <CustomInput label="Role" readOnly value={user.role} />
 
-                <CustomInput label="Status" readOnly value={user.role} />
+                <CustomInput label="Status" readOnly value={user.status} />
               </RowContainer>
             </Stack>
           )}
