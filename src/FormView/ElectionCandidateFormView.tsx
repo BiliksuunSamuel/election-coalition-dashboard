@@ -19,7 +19,6 @@ import { ChangeEvent } from "react";
 import { GalleryAdd } from "iconsax-react";
 import {
   IElectionCandidate,
-  IElectionCandidateRequest,
   IElectionPortfolio,
 } from "../models/ElectionModel";
 import { IPartyLookup } from "../models/PartyModel";
