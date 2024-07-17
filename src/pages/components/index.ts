@@ -7,3 +7,4 @@ export { default as CreateUserModal } from "./CreateUserModal";
 export { default as CandidateResultsChartView } from "./CandidateResultsChartView";
 export { default as ElectionResultsSummaryStats } from "./ElectionResultsSummaryStats";
 export { default as DasboardSummaryCardView } from "./DasboardSummaryCardView";
+export { default as ManageElectionResultsView } from "./ManageElectionResultsView";

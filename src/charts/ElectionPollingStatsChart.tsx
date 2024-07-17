@@ -1,18 +1,26 @@
+import { StackProps } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
 
-export default function ElectionPollingStatsChart() {
+interface IProps extends StackProps {
+  labels?: string[];
+  data?: number[];
+}
+export default function ElectionPollingStatsChart({
+  data = [],
+  labels = [],
+}: IProps) {
   return (
     <BarChart
       xAxis={[
         {
           id: "barCategories",
-          data: ["NDC", "NPP", "PNDC", "CPP", "PNC", "UGCC"],
+          data: labels,
           scaleType: "band",
         },
       ]}
       series={[
         {
-          data: [5000000, 2000000, 200000, 100000, 500900, 990000],
+          data: data,
         },
       ]}
       height={300}

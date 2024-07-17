@@ -22,6 +22,7 @@ import useParty from "../../hooks/useParty";
 import { useElection } from "../../hooks/useElection";
 import { initialCandidateRequest } from "../../models/CandidateModel";
 import { Stack } from "@mui/material";
+import useConstituency from "../../hooks/useConstituency";
 
 export default function CandidatesPage() {
   const dispatch = useAppDispatch();
@@ -47,6 +48,8 @@ export default function CandidatesPage() {
     setShowDeleteModal,
   } = useCandidate();
 
+  const { getConstituencies, constituencies } = useConstituency();
+
   const { partiesForLookup, handleGetPartiesForLookup } = useParty();
   const { elections, getElections, selectedElection, setSelectedElection } =
     useElection();
@@ -55,6 +58,7 @@ export default function CandidatesPage() {
       filterCandidates(filter),
       handleGetPartiesForLookup(),
       getElections({ pageSize: 100 }),
+      getConstituencies({ pageSize: 500 }),
     ]);
   }
   useEffect(() => {
@@ -70,6 +74,9 @@ export default function CandidatesPage() {
         portfolio: selectedCandidate.portfolio,
         electionId: selectedCandidate.electionId,
         electionTitle: selectedCandidate.electionTitle,
+        constituencyId: selectedCandidate.constituencyId,
+        constituencyName: selectedCandidate.constituencyName,
+        dorminance: selectedCandidate.dorminance,
       });
       setSelectedElection(
         elections.results.find(
@@ -99,6 +106,7 @@ export default function CandidatesPage() {
       <CandidateFormView
         candidateRequest={candidateRequest}
         open={showCandidateForm}
+        constituencies={constituencies.results}
         handleClose={() => {
           setShowCandidateForm(false);
           setSelectedCandidate(null);

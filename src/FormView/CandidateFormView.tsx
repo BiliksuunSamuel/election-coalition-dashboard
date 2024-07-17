@@ -11,6 +11,9 @@ import { ICandidateRequest } from "../models/CandidateModel";
 import { RowContainer } from "../views";
 import { IPartyLookup } from "../models/PartyModel";
 import { IElection } from "../models/ElectionModel";
+import { CandidateDorminance } from "../enums/candidate.dorminance";
+import { IConstituency } from "../models/ConstituencyModel";
+import { useEffect } from "react";
 
 interface IProps extends IModalProps {
   handleClose?: () => void;
@@ -23,6 +26,7 @@ interface IProps extends IModalProps {
   setSelectedElection: React.Dispatch<React.SetStateAction<IElection | null>>;
   elections: IElection[];
   setCandidateRequest: React.Dispatch<React.SetStateAction<ICandidateRequest>>;
+  constituencies: IConstituency[];
 }
 export default function CandidateFormView({
   handleClose,
@@ -35,8 +39,12 @@ export default function CandidateFormView({
   setSelectedElection,
   selectedElection,
   setCandidateRequest,
+  constituencies,
   ...others
 }: IProps) {
+  useEffect(() => {
+    console.log(candidateRequest.dorminance);
+  }, [candidateRequest]);
   return (
     <CustomDialog fullWidth maxWidth="sm" showCloseIcon={false} {...others}>
       <Stack spacing={2}>
@@ -49,7 +57,6 @@ export default function CandidateFormView({
         <Stack spacing={2}>
           <CustomInput
             onChange={handleCandidateFormChange}
-            placeholder="Full Name"
             label="Name"
             name="name"
             value={candidateRequest.name}
@@ -117,6 +124,55 @@ export default function CandidateFormView({
               </MenuItem>
             ))}
           </CustomSelect>
+          <CustomSelect
+            value={candidateRequest.dorminance}
+            label="Dorminance"
+            name="dorminance"
+            onChange={(e) => {
+              handleCandidateFormChange({
+                currentTarget: {
+                  name: "dorminance",
+                  id: "dorminance",
+                  value: e.target.value,
+                },
+                target: {
+                  value: e.target.value as any,
+                },
+              } as any);
+            }}
+          >
+            {[
+              CandidateDorminance.Constituency,
+              CandidateDorminance.National,
+            ].map((dorminance) => (
+              <MenuItem key={dorminance} value={dorminance}>
+                {dorminance}
+              </MenuItem>
+            ))}
+          </CustomSelect>
+          {candidateRequest.dorminance === CandidateDorminance.Constituency && (
+            <CustomSelect
+              value={candidateRequest.constituencyId}
+              label="Constituency"
+              name="constituencyId"
+            >
+              {constituencies.map((con) => (
+                <MenuItem
+                  onClick={() =>
+                    setCandidateRequest({
+                      ...candidateRequest,
+                      constituencyId: con.id,
+                      constituencyName: con.name,
+                    })
+                  }
+                  key={con.id}
+                  value={con.id}
+                >
+                  {con.name}
+                </MenuItem>
+              ))}
+            </CustomSelect>
+          )}
           <RowContainer justifyContent="flex-end">
             <PrimaryButton
               disabled={loading}

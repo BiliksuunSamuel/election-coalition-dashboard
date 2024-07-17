@@ -7,6 +7,7 @@ import { FaUsers } from "react-icons/fa";
 import { UserRole } from "../enums/UserRoles";
 import { AiOutlinePartition } from "react-icons/ai";
 import { MdOutlinePoll } from "react-icons/md";
+import { LiaVoteYeaSolid } from "react-icons/lia";
 
 export default (role?: UserRole): ISidebarRoute[] => {
   const adminRoutes = [
@@ -20,6 +21,11 @@ export default (role?: UserRole): ISidebarRoute[] => {
       title: "Elections",
       Icon: MdOutlinePoll,
       route: "/dashboard/elections",
+    },
+    {
+      title: "Results",
+      Icon: LiaVoteYeaSolid,
+      route: "/dashboard/results",
     },
     {
       title: "Candidates",

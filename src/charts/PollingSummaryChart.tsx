@@ -1,10 +1,19 @@
 import { StackProps, useTheme } from "@mui/material";
 import { PieChart } from "@mui/x-charts";
+import { IElectionResultsSummaryData } from "../models/ElectionResultModel";
 
 interface IProps extends StackProps {
   height?: number;
+  data?: IElectionResultsSummaryData;
 }
-export default function PollingSummaryChart({ height = 230 }: IProps) {
+export default function PollingSummaryChart({
+  data = {
+    rejectedVotes: 999500,
+    validVotes: 6000500,
+    totalVotes: 7000000,
+  },
+  height = 230,
+}: IProps) {
   const theme = useTheme();
   return (
     <PieChart
@@ -16,9 +25,9 @@ export default function PollingSummaryChart({ height = 230 }: IProps) {
       series={[
         {
           data: [
-            { id: 0, value: 7000000, label: "Total" },
-            { id: 1, value: 6000500, label: "Valid" },
-            { id: 2, value: 999500, label: "Rejected" },
+            { id: 0, value: data.totalVotes, label: "Total" },
+            { id: 1, value: data.validVotes, label: "Valid" },
+            { id: 2, value: data.rejectedVotes, label: "Rejected" },
           ],
           arcLabel: (item) => `${item.label}`,
           arcLabelMinAngle: 45,

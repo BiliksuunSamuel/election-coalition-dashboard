@@ -42,7 +42,7 @@ export default function useCandidate() {
   function handleCandidateFormChange(e: React.ChangeEvent<HTMLInputElement>) {
     setCandidateRequest({
       ...candidateRequest,
-      [e.target.name]: e.currentTarget.value,
+      [e.currentTarget.name]: e.target.value,
     });
   }
 

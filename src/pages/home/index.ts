@@ -6,3 +6,4 @@ export { default as HomePage } from "./HomePage";
 export { default as ConstituencyManagementPage } from "./ConstituencyManagementPage";
 export { default as ContentPage } from "./ContentPage";
 export { default as CandidatesPage } from "./CandidatesPage";
+export { default as ResultsPage } from "./ResultsPage";

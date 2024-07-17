@@ -1,4 +1,5 @@
 import { IBaseEntity, IBaseFilter } from ".";
+import { CandidateDorminance } from "../enums/candidate.dorminance";
 import { UserStatus } from "../enums/UserStatus";
 
 export interface ICandidate extends IBaseEntity {
@@ -13,6 +14,9 @@ export interface ICandidate extends IBaseEntity {
   portfolio: string;
   electionId: string;
   electionTitle: string;
+  constituencyId: string;
+  constituencyName: string;
+  dorminance: CandidateDorminance;
 }
 
 export interface ICandidateFilter extends IBaseFilter {
@@ -33,6 +37,9 @@ export interface ICandidateRequest {
   portfolio: string;
   electionId: string;
   electionTitle: string;
+  constituencyId: string;
+  constituencyName: string;
+  dorminance: CandidateDorminance;
 }
 
 export const initialCandidateRequest: ICandidateRequest = {
@@ -46,6 +53,9 @@ export const initialCandidateRequest: ICandidateRequest = {
   portfolio: "",
   electionId: "",
   electionTitle: "",
+  constituencyId: "",
+  constituencyName: "",
+  dorminance: CandidateDorminance.Constituency,
 };
 
 export const candidateFilter: ICandidateFilter = {

@@ -7,6 +7,7 @@ import {
   HomePage,
   NotificationsPage,
   ProfileSettingsPage,
+  ResultsPage,
   UserManagementPage,
 } from "../pages/home";
 import { AuthGuard } from "../pages/auth";
@@ -26,6 +27,7 @@ export default function HomeRouter() {
         <Route path="users" element={<UserManagementPage />} />
         <Route path="elections" element={<ElectionManagementPage />} />
         <Route path="candidates" element={<CandidatesPage />} />
+        <Route path="results" element={<ResultsPage />} />
         <Route path="profile-settings" element={<ProfileSettingsPage />} />
         <Route path="notifications" element={<NotificationsPage />} />
         <Route path="constituencies" element={<ConstituencyManagementPage />} />
